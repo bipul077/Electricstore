@@ -1,0 +1,64 @@
+{% extends "pages/base.html" %}
+{% load static %}
+{% block content %}
+
+
+ 
+<div class="slider">
+      <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
+      <div class="carousel-inner">
+         <div class="carousel-item active">
+                  <img src="{% static 'media/home1.jpg' %}" class="d-block w-100" alt="none">
+         </div>
+            <div class="carousel-item">
+                  <img src="{% static 'media/controller1.jpg' %}" class="d-block w-100" alt="none">
+            </div>
+            <div class="carousel-item">
+                  <img src="{% static 'media/game.jpg' %}" class="d-block w-100" alt="none">
+            </div>
+            </div>
+               <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+               <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+               <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+               <span class="carousel-control-next-icon" aria-hidden="true"></span>
+               <span class="visually-hidden">Next</span>
+            </button>
+      </div>
+         <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
+         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.min.js"></script>
+   </div>
+        <div class="mobileslider">
+              <button class="btn btn-primary" id="showbtn">Show more</button>
+              <h1>Mobile</h1>
+              <div class="owl-carousel owl-theme">
+                  {% for b in mobile %}
+                  <!-- mobile vaneko views.py ko dictionary ko mobile -->
+                  <div class="mobileitem">
+                        <a href="{% url 'product-detail' b.id %}">
+                        <img src="{{b.product_image.url}}" height="200">
+                        <!-- product_image bhaneko models.y ko Product model ko product_image ho -->
+                        <p class="cap">{{b.title}}</p>
+                        <p class="pricecap">Rs {{b.discounted_price}}</p>
+                        </a>     
+                  </div>
+                  {% endfor %}
+            </div>        
+      </div>
+      <div class="Laptopslider">
+            <button class="btn btn-primary" id="showbtn">Show more</button>
+            <h1>Laptop</h1>
+            <div class="owl-carousel owl-theme">
+                {% for b in laptop %}
+                <!-- laptop vaneko views.py ko dictionary ko laptop -->
+                <div class="mobileitem">
+                      <img src="{{b.product_image.url}}" height="200">
+                      <p class="cap">{{b.title}}</p>
+                      <p class="pricecap">Rs {{b.discounted_price}}</p>
+                </div>
+                {% endfor %}
+          </div>        
+    </div>
+    
+{% endblock content %}

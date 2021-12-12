@@ -1,0 +1,94 @@
+{% extends "pages/base.html" %}
+{% load static %}
+{% block title %}Product Detail{% endblock title %}
+{% block content %}
+<div class="container">
+         
+    <div class="card" id="card">
+        <div class="row">
+            <aside class="col-sm-5 border-right">
+                 
+                <div class="slider2">
+                    <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
+                    <div class="carousel-inner">
+                       <div class="carousel-item active">
+                                <img src="{{product.product_image.url}}" class="d-block w-100" alt="none">
+                       </div>
+                          <div class="carousel-item">
+                                <img src="{{product.product_image.url}}" class="d-block w-100" alt="none">
+                          </div>
+                          <div class="carousel-item">
+                                <img src="{{product.product_image.url}}" class="d-block w-100" alt="none">
+                          </div>
+                          </div>
+                             <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+                             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                             <span class="visually-hidden">Previous</span>
+                          </button>
+                          <button class="carousel-control-next"  type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+                             <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                             <span class="visually-hidden">Next</span>
+                          </button>
+                    </div>
+                       <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
+                       <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.min.js"></script>
+                 </div> 
+            </aside>
+
+    <aside class="col-sm-7">
+    <article class="card-body p-5">
+        <h3 class="title mb-3">{{product.title}}</h3>
+
+    <p class="price-detail-wrap"> 
+        <span class="price h3 text-danger"> 
+            <span class="currency">Rs </span><span class="num">{{product.discounted_price}}</span>
+        </span>  
+        <span style="text-decoration: line-through;">Rs </span><span class="num" style="text-decoration: line-through; font-weight: bold;" >{{product.selling_price}}</span>
+    </p> <!-- price-detail-wrap .// -->
+    <dl class="item-property">
+    <dt><span id="para1">Description</span></dt>
+    <dd><p><span id="para2">{{product.description}}</span></p></dd>
+    </dl>
+    <dl class="param param-feature">
+    <dt><span id="para3">Model#</span></dt>
+    <dd><span id="para4">12345611</span></dd>
+    </dl>  <!-- item-property-hor .// -->
+    <dl class="param param-feature">
+    <dt><span id="para5">Brand</span></dt>
+    <dd><span id="para6">{{product.brand}}</span></dd>
+    </dl>  <!-- item-property-hor .// -->
+    <dl class="param param-feature">
+    <dt><span id="para7">Delivery</span></dt>
+    <dd><span id="para8">All over Nepal</span></dd>
+    </dl>  <!-- item-property-hor .// -->
+
+    <hr>
+        <div class="row">
+            <div class="col-sm-5">
+                <dl class="param param-inline">
+                <dt>Quantity: </dt>
+                <dd>
+                    <select class="form-control form-control-sm" style="width:70px;">
+                        <option> 1 </option>
+                        <option> 2 </option>
+                        <option> 3 </option>
+                    </select>
+                </dd>
+                </dl>  
+            </div> 
+            <div class="col-sm-7">
+                <div class="param param-inline" style="margin-top: 15px;">
+                        <!-- <a href="cart.html" class="btn btn-md btn-warning text-uppercase"><i class="fas fa-shopping-cart"></i> Add to Cart </a> -->
+                        <!-- <a href="cart.html" class="btn btn-md btn-outline-warning text-uppercase"> <i class="fas fa-shopping-cart"></i> Add to cart </a> -->
+                </div>  
+            </div> 
+            <a href="cart.html" class="btn btn-md btn-warning text-uppercase" style="width: 150px;"><i class="fas fa-shopping-cart"></i> Add to Cart </a>
+            <br>
+            <a href="cart.html" class="btn btn-md btn-danger text-uppercase" style="width: 150px; margin-left: 20px;"> Buy Now </a>
+        </div> 
+    </article> 
+    </aside> 
+    </div> 
+    </div> 
+  </div>
+{% endblock content %}

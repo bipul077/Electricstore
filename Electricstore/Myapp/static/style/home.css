@@ -1,0 +1,347 @@
+
+body{
+	margin: 0;
+	padding: 0;
+    height: auto;
+	background: white;
+    overflow-x: hidden;
+    min-height: 100vh;
+    /* display: flex; 
+    flex-direction: column;  */
+}
+
+ .search {
+    width: 90%;
+    height: 50px;
+    margin-top: 30px;
+     display: flex;
+    justify-content: center;
+    border-radius: 20px;
+  }
+.searchinput{
+    border: 2px solid black;
+  padding: 10px;
+  border-radius: 50px 20px;
+} 
+
+.page-nav {
+    overflow: hidden;
+    background-color: #333;
+    padding-bottom: 10px;
+}
+.page-nav a {
+    float: left;
+    padding: 0px 4px;
+  }
+  #nav:hover{
+      background-color:red;
+  }
+  #nav4:hover{
+    background-color:red;
+}
+#nav3:hover{
+    background-color:red;
+}
+  #nav2:hover{
+    background-color:red;
+}
+
+.submenu{
+    width: 100%;
+    height: 44px;
+    background-color: blue;
+    display: flex;
+    justify-content: center;
+}
+.submenu a{
+    float: left;
+    font-size: 16px;
+    /* font-family: cursive; */
+    color: white;
+    padding: 10px 16px;
+    text-decoration: none;
+}
+
+/* hamburgerbutton css */
+.hamburger{
+    display: none;
+    margin-top: 40px;
+}
+@media screen and (max-width:500px){
+	.hamburger{
+        float: right;
+		display: block;
+        margin-right: 20px;
+        margin-bottom: 10px;
+	}
+    .classic{
+		display: none;
+		position: absolute;
+		background-color: black;
+		top: 90px;
+		width: 30%;
+		right: 20px;
+		float: right;
+	}
+    .carticon{
+        margin-top: 15px;
+    }
+    .searchtext{
+        width: 100%;
+    }
+    .search:hover > .aboutsearch-btn i{
+        margin-top: -35px;
+        margin-left: 8px;
+    }
+    *{
+       overflow-x: hidden;
+    }
+}
+
+.aboutdropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 150px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+}
+  
+.aboutdropdown-content a {
+    float: none;
+    color: black;
+    text-decoration: none;
+    display: block;
+    text-align: left;
+}
+  
+.aboutdropdown-content a:hover {
+    background-color: #ddd;
+}
+  
+.aboutdropdown:hover .aboutdropdown-content {
+    display: block;
+}
+.aboutdropdown {
+    float: left;
+    overflow: hidden;
+    /* font-family: cursive; */
+  }
+  
+.aboutdropdown .aboutdropbtn {
+    font-size: 16px;  
+    /* font-family: cursive; */
+    border: none;
+    outline: none;
+    color: white;
+    padding: 10px 16px;
+    background-color: inherit;
+    font-family: inherit;
+    margin: 0;
+}
+  
+#bio{
+    padding-left: 5px;
+    border-radius: 2%;
+}
+#bio{
+    height: 150px;
+}
+label{
+	display: block;
+}
+input, textarea{
+	width: 80%;
+}
+
+/* for slider */
+.slider{
+    margin-left: 20px;
+    margin-right: 20px;
+}
+
+
+/* for footer page */
+.frow{
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+} 
+.fcontainer{
+    max-width: 1170px;
+    background-color: #333;
+    margin: auto;
+}
+.footer{
+    background-color: #24262b;
+    padding: 20px 0;
+	clear: both;
+	height: 220px;
+    margin-top: auto;
+}
+.footer-col{
+    width: 30%;
+    padding: 0 15px;
+}
+.footer-col h1{
+    margin: 10px 0px;
+    margin-left: 30px;
+    font-size: 18px;
+    color: white;
+    text-transform: capitalize;
+    margin-bottom: 20px; 
+    position: relative;
+    /* the element is positioned relative to its normal position in relative */
+}
+ul{
+    list-style: none;
+}
+.footer-col h1::before{
+    content: '';
+    position: absolute;
+    /* the element is positioned absolutely to its first positioned parent */
+    left: 0;
+    bottom: -10px;
+    background-color: #e91e63;
+    height: 2px;
+    box-sizing: border-box;
+    width: 50px;
+}
+.footer-col ul li:not(:last-child){
+    margin-bottom: 10px;
+}
+.footer-col ul li a{
+    font-size: 15px;
+    text-transform: capitalize;
+    color: white;
+    font-weight: 300;
+    display: block;
+    text-decoration: none;
+}
+.footer-col p{
+    margin-left: 25px;
+    font-weight: 300;
+    color: white;
+}
+
+.footer-col ul li a:hover{
+    color: white;
+    padding-left: 10px;
+}
+.footer-col .social-links a{
+    display: inline-block;
+    height: 40px;
+    width: 40px;
+    background-color: rgba(255,255,255,0.2);
+    margin: 0 10px 10px 0;
+    text-align: center;
+    line-height: 40px;
+    border-radius: 50%;
+    color: white;
+}
+.footer-col .social-links a:hover{
+    color: #24262b;
+    background-color: white;
+}
+.social-links{
+    margin-left: 25px;
+}
+@media screen and (max-width:500px){
+	.footer-col{
+        width: 100%;
+    }
+}
+
+/* for add to cart css */
+.Product-img img{
+	width: 100%;
+}
+.main-section{
+	font-family: 'Roboto Condensed', sans-serif;
+	margin-top:100px;
+}
+
+/* for accessibility button */
+.accbtn, .accbtn2, .accbtn3{
+    border-radius: 7px;
+    border-color: black;
+    cursor: pointer;
+    font-size: 12px;
+}
+/*.accessibilitybutton{
+    position: absolute;
+    width: 15%;
+    top: 0px;
+    right: 20px;
+} */
+#logbtn{
+    margin-top: 6px;
+}
+.shopicons i{
+    padding-top: 10px;
+    padding-right: 5px;
+}
+.shopicons p{
+    margin-top: 5px;
+    margin-left: 5px;
+    float: right;
+    font-size: 15px;
+}
+
+/* homepage mobile,laptop slider */
+.mobileslider,.Laptopslider {
+    margin: 0px 20px;
+}
+.Laptopslider h1{
+    margin-left: 20px;
+}
+#showbtn{
+    float: right;
+    margin-top: 10px;
+    margin-right: 20px;
+}
+.mobileitem{
+	border: 2px solid #ccc;
+}
+.cap{
+	text-align: center;
+	color: black;
+	font-family: cursive;
+	font-size: 14px; 
+    
+}
+.pricecap{
+    font-weight: bold;
+    text-align: center;
+	color: black;
+	font-family: cursive;
+	font-size: 14px; 
+    
+}
+.carousel-inner img{
+    height: 500px;
+}
+a{
+    text-decoration: none;
+}
+@media screen and (max-width:1000px){
+    .carousel-inner img{
+        height: auto;
+    }
+}
+
+/* productdetail page css */
+.container{
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+.slider2{
+	padding: 30px;
+	float: left;
+}
+.slider2 img{
+    height: 300px;
+}
+.btn-outline-warning{
+    color: black;
+}
