@@ -1,0 +1,113 @@
+{% extends "pages/base.html" %}
+{% load static %}
+{% block title %}Customer Registration{% endblock title %}
+{% block content %}
+<div class="signupmain">
+<div class="main">  	
+    <input type="checkbox" id="chk" aria-hidden="true">
+
+        <div class="signup">
+            <form action="" method="post" id="form">
+                 
+                {% csrf_token %}
+                <label class = "signinlabel" for="chk" aria-hidden="true" style="margin-bottom: 0px; margin-top: 20px;">Sign up</label> 
+                {% for fm in forms %}
+                <div class="formlabels">
+                    {{fm.label_tag}} {{fm}} <small class = "text-danger" id="errortext">{{fm.errors|striptags}}</small><!--printing labels,field and errors-->
+                </div>
+                {% endfor %}
+                <br>
+                <button class="btn btn-danger" onClick="clearform()">Sign up</button>
+                <br>
+                <div class="text-center text-primary fw-bold"><small>Existing User ? <a href="{% url 'login' %}" class="text-danger">Login Now</a> </small></div>
+                {% if form.non_field_errors %}
+                 {% for error in form.non_field_errors %}
+                    <p class="alert alert-danger my-3">{{error}}</p>
+                 {% endfor %}
+                {% endif %}
+                {% if messages %}
+                {% for message in messages %}
+                    <p {% if message.tags %} class="alert alert-{{message.tags}} mb-5" {% endif %}>{{message}}</p>
+                {% endfor %}
+                {% endif %}   
+            </form>
+        </div>
+</div>
+</div>
+<style>
+#errortext{
+    display: flex;
+    justify-content: center;
+}
+.signupmain{
+	margin: 0;
+	padding: 0;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	min-height: 100vh;
+	font-family: 'Jost', sans-serif;
+	background: white;
+}
+.formlabels label{
+    margin-left: 50px;
+}
+.main{
+	width: 500px;
+	height: 600px;
+	background: red;
+	overflow: hidden;
+	background: url("https://doc-08-2c-docs.googleusercontent.com/docs/securesc/68c90smiglihng9534mvqmq1946dmis5/fo0picsp1nhiucmc0l25s29respgpr4j/1631524275000/03522360960922298374/03522360960922298374/1Sx0jhdpEpnNIydS4rnN4kHSJtU1EyWka?e=view&authuser=0&nonce=gcrocepgbb17m&user=03522360960922298374&hash=tfhgbs86ka6divo3llbvp93mg4csvb38") no-repeat center/ cover;
+	border-radius: 10px;
+	box-shadow: 5px 20px 50px #000;
+}
+#chk{
+	display: none;
+}
+.signup{
+	position: relative;
+	width:100%;
+	height: 100%;
+}
+.signinlabel{
+	color: blue;
+	font-size: 2.3em;
+	justify-content: center;
+	display: flex;
+	margin: 60px;
+	font-weight: bold;
+	cursor: pointer;
+	transition: .5s ease-in-out;
+}
+.main input{
+	width: 80%;
+	height: 30px;
+	background: #e0dede;
+	justify-content: center;
+	display: flex;
+	margin: 10px auto;
+	padding: 10px;
+	border: none;
+	outline: none;
+	border-radius: 5px;
+}
+
+.main button{
+    margin: 0px auto;
+    display: flex;
+    justify-content: center;
+}
+button:hover{
+	background: #6d44b8;
+}
+
+
+@media screen and (max-width: 986px){
+    .main{
+        margin-right: 10px;
+        margin-left: 10px;
+    }
+    
+}
+</style>
+{% endblock content %}

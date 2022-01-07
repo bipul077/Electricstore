@@ -1,0 +1,15 @@
+.detailcontainer{
+    margin: 10px 10px;
+}
+.row1{
+	padding: 30px;
+	float: left;
+	width: 100%;
+}
+.btn-outline-warning{
+    color: black;
+}
+body{
+    overflow-x: hidden;
+}
+
