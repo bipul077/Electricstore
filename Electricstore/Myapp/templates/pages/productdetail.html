@@ -72,15 +72,15 @@
                 </dd>
                 </dl>  
             </div> 
-            <div class="col-sm-7">
-                <div class="param param-inline" style="margin-top: 15px;">
-                        <!-- <a href="cart.html" class="btn btn-md btn-warning text-uppercase"><i class="fas fa-shopping-cart"></i> Add to Cart </a> -->
-                        <!-- <a href="cart.html" class="btn btn-md btn-outline-warning text-uppercase"> <i class="fas fa-shopping-cart"></i> Add to cart </a> -->
-                </div>  
-            </div> 
-            <a href="cart.html" class="btn btn-md btn-warning text-uppercase" style="width: 150px;"><i class="fas fa-shopping-cart"></i> Add to Cart </a>
-            <br>
-            <a href="cart.html" class="btn btn-md btn-danger text-uppercase" style="width: 150px; margin-left: 20px;"> Buy Now </a>
+            <div class="cartbuy" style="display: flex;">
+                <form action="/add-to-cart"><!--to get the product id we do this-->
+                    <input type="hidden" name="prod_id" value={{product.id}} id="prod_id">
+                    <button type="submit" class="btn btn-warning"><i class="fas fa-shopping-cart"></i> Add to Carts</button>
+                </form>
+                <!-- <a href="cart.html" class="btn btn-warning"><i class="fas fa-shopping-cart"></i> Add to Cart </a> -->
+                <br>
+                <a href="cart.html" class="btn btn-danger" style="margin-left: 20px;"> Buy Now </a>
+            </div>
         </div> 
     </article> 
     </aside> 

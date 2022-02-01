@@ -129,6 +129,7 @@ STATIC_URL = '/static/'
 MEDIA_URL = "/media/"#media url is the reference url for browser to access the files over HTTP
 MEDIA_ROOT = os.path.join(BASE_DIR,"media/")#BASE_DIR means the directory of manage.py
 LOGIN_REDIRECT_URL = '/profile/'
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 
 # Default primary key field type
