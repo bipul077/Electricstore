@@ -19,5 +19,16 @@ urlpatterns = [
      path('password-reset-complete/',auth_views.PasswordResetCompleteView.as_view(template_name='pages/passwordresetcomplete.html'),name='password_reset_complete'),
      path('address/', views.address, name='address'),
      path('add-to-cart/',views.add_to_cart,name='add-to-cart'),
-     path('cart/',views.show_cart,name='showcart')
+     path('cart/',views.show_cart,name='showcart'),
+     path('pluscart/',views.plus_cart,name='pluscart'),#takes prod_id and send to views.plus_cart
+     path('minuscart/',views.minus_cart,name='minuscart'),
+     path('removecart/',views.remove_cart,name='removecart'),
+     path('checkout/', views.checkout, name='checkout'),
+     path('paymentdone/', views.payment_done, name='payment'),
+     path('orders/', views.orders, name='orders'),
+     path('add-wishlist/', views.add_wishlist, name='add_wishlist'),
+     path('my-wishlist/', views.my_wishlist, name='wishlist'),
+     path('removeitem/',views.remove_item,name='removeitem'),
+     path('categorylist/<int:cat_id>',views.CategoryListView.as_view(),name='categorylist'),
+     path('save-review/<int:pid>',views.save_review,name='save-review')
 ]

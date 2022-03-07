@@ -16,11 +16,17 @@
     <link rel="stylesheet" type="text/css" href="{% static 'style/themify-icons.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'style/elegant-icons.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'style/nice-select.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'style/slick.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'style/nouislider.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'style/slick-theme.css' %}">
+    <!-- <link rel="stylesheet" type="text/css" href="{% static 'style/bootstrap.min.css' %}"> -->
 
     <link rel="stylesheet" type="text/css" href="{% static 'style/slicknav.min.css' %}">
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"> -->
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 </head>
 <body>
+    <div class="maincontent">
     <header class="header-section">
         
         <div class="container">
@@ -47,7 +53,7 @@
                             <div class="shopicons">
                                 {% if request.user.is_authenticated %}
                                     <li class="heart-icon"><a href="{% url 'showcart' %}"><i class="fa fa-shopping-cart" style="font-size:30px;color:darkgoldenrod"><p>Cart</p></i></a></li>
-                                    <li class="cart-icon"><a href="#"><i class="fa fa-heart" aria-hidden="true" style="font-size:30px;color: darkgoldenrod"><p>Wishlist</p></i></a></li>                           
+                                    <li class="cart-icon"><a href="{% url 'wishlist' %}"><i class="fa fa-heart" aria-hidden="true" style="font-size:30px;color: darkgoldenrod"><p>Wishlist</p></i></a></li>                           
                                
                                 {% else %}
                                    <li class="heart-icon"><a href="{% url 'login' %}"><button class="btn btn-warning" id="logbtn">Login</button></a></li>  
@@ -66,8 +72,8 @@
                         <span>All Categories</span>
                         <i class="fa fa-caret-down"></i>
                         <ul class="depart-hover">
-                            <li><a href="#">Mobiles</a></li>
-                            <li><a href="#">Laptops</a></li>
+                            <li><a href="/categorylist/1">Mobiles</a></li> 
+                            <li><a href="/categorylist/2">SmartLaptops</a></li> 
                             <li><a href="#">Home appliances</a></li>
                             <li><a href="#">Television</a></li>
                             <li><a href="#">Refregerators</a></li>
@@ -78,6 +84,19 @@
                 </div>
                 <nav class="nav-menu mobile-menu">
                     <ul>
+                        <span class="cats">
+                            <li><a href="#">All Categories</a>
+                                <ul class="depart-hover">
+                                    <li><a href="/categorylist/1">Mobiles</a></li> 
+                                    <li><a href="/categorylist/2">Laptops</a></li> 
+                                    <li><a href="#">Home appliances</a></li>
+                                    <li><a href="#">Television</a></li>
+                                    <li><a href="#">Refregerators</a></li>
+                                    <li><a href="#">Accessories/Gadgets</a></li>
+                                    <li><a href="#">Washing Machines</a></li>
+                                </ul>
+                            </li>
+                        </span>
                         <li class="active"><a href="./index.html">Home</a></li>
                         <li><a href="./shop.html">Shop</a></li>
                         <li><a href="#">Collection</a>
@@ -89,7 +108,7 @@
                         </li>
                         <!-- <li><a href="./blog.html">Blog</a></li> -->
                         
-                        <li><a href="./contact.html">Contact</a></li>
+                        <li><a href="#">Contact</a></li>
                         <li><a href="#">Pages</a>
                             <ul class="dropdown">
                                 <li><a href="./blog-details.html">Blog Details</a></li>
@@ -102,7 +121,7 @@
                         <li><a href="#">{{request.user.username|capfirst}}<i class="fa fa-caret-down" id="downdown" style="margin-left: 5px;"></i></a><!--capfirst capitalize the first letter-->
                             <ul class="dropdown">
                                 <li><a href="{% url 'profile' %}">Profile</a></li>
-                                <li><a href="./shopping-cart.html">Orders</a></li>
+                                <li><a href="{% url 'orders' %}">Orders</a></li>
                                 <li><a href="{% url 'passwordchange' %}">Change Password</a></li>
                                 <li><a href="{% url 'logout' %}">Logout</a></li>
                             </ul>
@@ -120,7 +139,6 @@
         </div>          
     <!-- </main>   -->
            
-    
     <footer class="footer">
 		<div class="fcontainer">
             <div class="frow">
@@ -155,6 +173,7 @@
             </div>
         </div>
 	</footer> 
+    </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js" integrity="sha512-bPs7Ae6pVvhOSiIcyUClR7/q2OAsRiovw4vAkX+zJbw3ShAeeqezq50RIIcIURq7Oa20rW2n2q+fyXBNcU9lrw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>

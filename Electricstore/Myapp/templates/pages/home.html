@@ -1,21 +1,19 @@
 {% extends "pages/base.html" %}
 {% load static %}
 {% block content %}
-
-
  
 <div class="slider">
       <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
       <div class="carousel-inner">
-         <div class="carousel-item active">
-                  <img src="{% static 'media/home1.jpg' %}" class="d-block w-100" alt="none">
-         </div>
-            <div class="carousel-item">
-                  <img src="{% static 'media/controller1.jpg' %}" class="d-block w-100" alt="none">
-            </div>
-            <div class="carousel-item">
-                  <img src="{% static 'media/game.jpg' %}" class="d-block w-100" alt="none">
-            </div>
+            {% for banners in banners %}
+            {% if forloop.counter == 1 %}
+            <div class="carousel-item active">
+                  {% else %}
+                  <div class="carousel-item">
+                  {% endif %}      
+                  <img src="{{banners.img.url}}" class="d-block w-100" alt="none">
+                  </div>
+            {% endfor %}
             </div>
             <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -28,10 +26,49 @@
       </div>
          <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
          <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.min.js"></script>
-   </div>
-        <div class="mobileslider">
+      </div> 
+
+      <div class="section">
+            <h2 class="topcategories">Top Categories</h2>
+            <div class="container">       
+                  <div class="row">    
+                        {% for b in catfeatured %}      
+                        <div class="col-md-4 col-xs-6">                 
+                              <div class="shop"> 
+                                    <div class="shop-img">
+                                          <img src="{{b.img.url}}" height="300px"alt="">
+                                    </div>
+                                    <div class="shop-body">
+                                          <h3>{{b.title}}<br>Collection</h3>
+                                          <a href="/categorylist/{{b.id}}" class="cta-btn">Shop now <i class="fa fa-arrow-circle-right"></i></a>
+                                    </div>
+                                    
+                              </div> 
+                        </div>
+                        {% endfor %}
+                  </div>             
+            </div>
+      </div>
+
+      <div class="featuredslider">
+            <!-- <button class="btn btn-primary" id="showbtn">Show more</button> -->
+            <h2 class="mobfcategories">Featured Products</h2>
+            <div class="owl-carousel owl-theme">
+            {% for b in featured %}
+            <div class="mobileitem">
+                  <a href="{% url 'product-detail' b.id %}">
+                  <img src="{{b.product_image.url}}" height="200">
+                  <!-- product_image bhaneko models.y ko Product model ko product_image ho -->
+                  <p class="cap">{{b.title}}</p>
+                  <p class="pricecap">Rs {{b.discounted_price}}</p>
+                  </a>     
+            </div>
+            {% endfor %}
+            </div>        
+      </div>
+      <div class="mobileslider">
               <!-- <button class="btn btn-primary" id="showbtn">Show more</button> -->
-              <h1>Mobiles</h1>
+              <h2 class="mobfcategories">Mobiles</h2>
               <div class="owl-carousel owl-theme">
                   {% for b in mobile %}
                   <!-- mobile vaneko views.py ko dictionary ko mobile -->
@@ -46,20 +83,6 @@
                   {% endfor %}
             </div>        
       </div>
-      <div class="Laptopslider">
-            <h1>Laptop</h1>
-            <div class="owl-carousel owl-theme">
-                {% for b in laptop %}
-                <!-- laptop vaneko views.py ko dictionary ko laptop -->
-                <div class="mobileitem">
-                  <a href="{% url 'product-detail' b.id %}">
-                      <img src="{{b.product_image.url}}" height="200">
-                      <p class="cap">{{b.title}}</p>
-                      <p class="pricecap">Rs {{b.discounted_price}}</p>
-                  </a>   
-                </div>
-                {% endfor %}
-          </div>        
-    </div>
+    
     
 {% endblock content %}

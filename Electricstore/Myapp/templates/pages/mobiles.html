@@ -1,0 +1,230 @@
+{% extends "pages/base.html" %}
+{% load static %}
+{% block content %}
+
+<div class="container-fluid mt-5 mb-5">
+    <div class="filtering">
+        <div class="filtering2"> <span class="btn text-primary"> <span class="fas fa-th px-1"></span><span style="color: darkblue;">Grid view</span> </span> <span class="btns"> <span class="fas fa-list-ul"></span><span class="px-1">List view</span></div>
+        <select name="sort" id="sort" class="px-1 py-1 ml-2">
+            <option value="" selected hidden>Sort by</option>
+            <option value="rating">Rating</option>
+            <option value="popular">Popular</option>
+            <option value="featured">Featured</option>
+        </select>
+    </div>
+    <div class="row g-2" id="container-fluid">
+        <div class="col-md-3">
+            <div class="processor p-2">
+                <div class="heading d-flex justify-content-between align-items-center">
+                    <h6 class="text-uppercase"><span id="cone">Case Size</span></h6> <span>--</span>
+                </div>
+                <div class="d-flex justify-content-between mt-2">
+                    <div class="form-check"> <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault5"> <label class="form-check-label" for="flexCheckDefault5"> <span id="op1">Mid-Tower</span></label> </div> <span>3</span>
+                </div>
+                <div class="d-flex justify-content-between mt-2">
+                    <div class="form-check"> <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked6" checked> <label class="form-check-label" for="flexCheckChecked6"><span id="op2">Super-Tower</span></label> </div> <span>4</span>
+                </div>
+                <div class="d-flex justify-content-between mt-2">
+                    <div class="form-check"> </label><input class="form-check-input" type="checkbox" value="" id="flexCheckChecked7" checked> <label class="form-check-label" for="flexCheckChecked7"><span id="op3">Full-Tower</span></label> </div> <span>14</span>
+                </div>
+                <div class="d-flex justify-content-between mt-2">
+                    <div class="form-check"> </label><input class="form-check-input" type="checkbox" value="" id="flexCheckChecked8" checked> <label class="form-check-label" for="flexCheckChecked8"><span id="op4">Mid-ITx</span></label> </div> <span>8</span>
+                </div>
+            </div>
+            <div class="processor p-2">
+                <div class="heading d-flex justify-content-between align-items-center">
+                    <h6 class="text-uppercase"><span id="ctwo">Case Material</span></h6> <span>--</span>
+                </div>
+                <div class="d-flex justify-content-between mt-2">
+                    <div class="form-check"> <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault"> <label class="form-check-label" for="flexCheckDefault"> <span id="op5">Steel</span> </label> </div> <span>3</span>
+                </div>
+                <div class="d-flex justify-content-between mt-2">
+                    <div class="form-check"> <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked1" checked> <label class="form-check-label" for="flexCheckChecked1"> <span id="op6">Aluminium</span></label> </div> <span>4</span>
+                </div>
+                <div class="d-flex justify-content-between mt-2">
+                    <div class="form-check"> </label><input class="form-check-input" type="checkbox" value="" id="flexCheckChecked2" checked> <label class="form-check-label" for="flexCheckChecked2"> <span id="op7">Plastic</span> </label> </div> <span>14</span>
+                </div>
+                <div class="d-flex justify-content-between mt-2">
+                    <div class="form-check"> </label><input class="form-check-input" type="checkbox" value="" id="flexCheckChecked3" checked> <label class="form-check-label" for="flexCheckChecked3"> <span id="op8">Tempered-Glass</span> </label> </div> <span>8</span>
+                </div>
+            </div>
+            <div class="brand p-2">
+                <div class="heading d-flex justify-content-between align-items-center">
+                    <h6 class="text-uppercase"><span id="cthree">Brand</span></h6> <span>--</span>
+                </div>
+                <div class="d-flex justify-content-between mt-2">
+                    <div class="form-check"> <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault11"> <label class="form-check-label" for="flexCheckDefault11"> <span id="op9">SAMSUNG</span> </label> </div> <span>13</span>
+                </div>
+                <div class="d-flex justify-content-between mt-2">
+                    <div class="form-check"> <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked12" checked> <label class="form-check-label" for="flexCheckChecked12"> <span id="op10">DELL</span> </label> </div> <span>4</span>
+                </div>
+                <div class="d-flex justify-content-between mt-2">
+                    <div class="form-check"> <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked13" checked> <label class="form-check-label" for="flexCheckChecked13"> <span id="op11">Acer</span> </label> </div> <span>24</span>
+                </div>
+                <div class="d-flex justify-content-between mt-2">
+                    <div class="form-check"> <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked14" checked> <label class="form-check-label" for="flexCheckChecked14"> <span id="op12">Corsair</span> </label> </div> <span>18</span>
+                </div>
+                <div class="d-flex justify-content-between mt-2">
+                    <div class="form-check"> <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked15" checked> <label class="form-check-label" for="flexCheckChecked15"> <span id="op13">ASUS</span> </label> </div> <span>44</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-9">
+            <div class="row g-2">
+                {% for b in mobile %}
+                <div class="col-md-4">
+                    <div class="product py-4"> 
+                   
+                        <a href="/product-detail/{{b.id}}">
+                            <div class="text-center"> <img src="{{b.product_image.url}}" width="200" height="200" alt="none"> </div>
+                        </a>    
+                            <div class="about text-center">
+                                <h1><span id="prod1">{{b.title}}</span></h1> <span id="price1">Rs {{b.discounted_price}}</span>
+                            </div>                   
+                        <div class="text-center" style="color: #ffbb00;"> <i class="fa fa-star star"></i> <i class="fa fa-star star"></i> <i class="fa fa-star star"></i> <i class="fa fa-star star"></i> </div>
+                        <div class="cart-button mt-3 px-2 d-flex justify-content-center align-items-center"> 
+                            <button class="btn btn-primary text-uppercase" ><a href="cart.html" style="text-decoration: none; color: white;"><span id="cart1">Add to cart</span></a></button>
+                        </div>
+                       
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+<style>
+select{
+    position: relative;
+    top: 5px;
+    height: 30px;
+}
+.t-products {
+background-image: linear-gradient(to right top, #5629c0, #5625cb, #5620d5, #551ae0, #5412eb);
+color: #eee;
+border-radius: 3px
+}
+
+.processor {
+    background-color: #eee;
+    margin-top: 5px;
+    border-bottom: 1px solid #fff
+}
+
+.brand {
+    margin-top: 5px;
+    background-color: #eee;
+    border-bottom: 1px solid #fff
+}
+.type {
+    background-color: #eee;
+}
+
+.product {
+    padding: 10px;
+    background-color: #eee;
+    border-radius: 5px;
+    position: relative
+}
+.about h1{
+    font-size: 18px;
+    cursor: pointer;
+}
+.about span {
+    color: #5629c0;
+    font-size: 16px
+}
+
+.cart-button button {
+    font-size: 12px;
+    color: #fff;
+    background-color: #5629c0;
+    height: 38px
+}
+
+.cart-button button:focus,
+button:active {
+    font-size: 12px;
+    color: #fff;
+    background-color: #5629c0;
+    box-shadow: none
+}
+
+.product_fav i {
+    line-height: 40px;
+    color: #5629c0;
+    font-size: 15px
+}
+
+.product_fav {
+    display: inline-block;
+    width: 36px;
+    height: 39px;
+    background: #FFFFFF;
+    box-shadow: 0px 1px 5px rgba(0, 0, 0, 0.1);
+    border-radius: 11%;
+    text-align: center;
+    cursor: pointer;
+    margin-left: 3px;
+    -webkit-transition: all 200ms ease;
+    -moz-transition: all 200ms ease;
+    -ms-transition: all 200ms ease;
+    -o-transition: all 200ms ease;
+    transition: all 200ms ease
+}
+
+.product_fav:hover {
+    background: #5629c0;
+}
+
+.product_fav:hover i {
+    color: #fff
+}
+
+.about {
+    margin-top: 12px
+}
+
+.off {
+    position: absolute;
+    left: 65%;
+    top: 6%;
+    width: 80px;
+    text-align: center;
+    height: 30px;
+    line-height: 8px;
+    border-radius: 5px;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff
+}
+.col-md-4{
+    margin: 12px 8px;
+    width: 30%;
+}
+.filtering{
+    display: flex;
+    justify-content: left;
+    margin-left: 0px;
+}
+
+@media screen and (max-width:800px){
+	.col-md-4{
+        width: 96%;
+    }
+}
+
+@media screen and (min-width:800px){
+	.col-md-3{
+        width: 20%;
+    }
+    .col-md-9{
+        width: 80%;
+        padding-left: 3%;
+    }
+    
+}
+</style>
+{% endblock content %}

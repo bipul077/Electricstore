@@ -5,24 +5,25 @@
 <div class="card" id="card">
     <div class="row" id="row">
         <div class="col-md-8 cart">
-            <div class="title">
+            <div class="titles">
                 <div class="row">
                     <div class="col">
-                        <h4><b><span id="s1">Shopping Cart</span></b></h4>
+                        <h4 style="margin-top: 20px;"><b><span id="s1">Shopping Cart</span></b></h4>
                     </div>
-                    <div class="col align-self-center text-right text-muted">3 items</div>
+                    <!-- <div class="col align-self-center text-right text-muted">3 items</div> -->
                 </div>
             </div>
+            <hr>
             {% for cart in carts %}
             <div class="row border-top border-bottom">
                 <div class="row main align-items-center">
                     <div class="col-2"><img class="img-fluid" src="{{cart.product.product_image.url}}" alt="image"></div>
                     <div class="col">
-                        <div class="row text-muted">{{cart.product.brand}}</div>
+                        <div class="row text-muted">{{cart.product.brand.title}}</div>
                         <div class="row">{{cart.product.title}}</div>
                     </div>
-                    <div class="col"> <a href="#">-</a><a href="#" class="border">{{cart.quantity}}</a><a href="#">+</a> </div>
-                    <div class="col"> {{cart.product.discounted_price}} <span class="close" id="s2" style="cursor: pointer;">Remove</span></div>
+                    <div class="col"> <a class="minus-cart" href="#" pid="{{cart.product.id}}">-</a><span id="quantity">{{cart.quantity}}</span><a class="plus-cart" href="#" pid="{{cart.product.id}}">+</a> </div>
+                    <div class="col">Rs. {{cart.product.discounted_price}} <span class="remove-cart" id="s2" pid="{{cart.product.id}}" style="cursor: pointer;"><i class="fa fa-times" style="float: right;"></i></i></span></div>
                 </div>
             </div>
             {% endfor %}
@@ -34,20 +35,20 @@
             </div>
             <hr>
             <div class="row">
-                <div class="col" style="padding-left:0;">Amount</div>
-                <div class="col text-right"> {{amount}}</div>
+                <div class="col" style="padding-left:0;">Amount:</div>
+                <div class="col text-right"><span id="amount">Rs. {{amount}}</span></div>
             </div>
             <div class="row">
                 <div class="col" style="padding-left:0;">Shipping price</div>
-                <div class="col text-right"> 70</div>
+                <div class="col text-right">Rs. 70</div>
             </div>
             <form>
                 <p>VOUCHER CODE</p> <input id="code" placeholder="Enter your code">
             </form>
             <div class="row" style="border-top: 1px solid rgba(0,0,0,.1); padding: 2vh 0;">
                 <div class="col">TOTAL PRICE</div>
-                <div class="col text-right"> {{totalamount}}</div>
-            </div> <a href="payment.html"><button class="btn btn-warning">CHECKOUT</button></a>
+                <div class="col text-right"><span id="totalamount">Rs. {{totalamount}}</span></div>
+            </div> <a href="{% url 'checkout' %}"><button class="btn btn-warning">CHECKOUT</button></a>
         </div>
     </div>
 </div>
@@ -61,7 +62,9 @@
     overflow-x: hidden;
     font-weight: bold 
 }
-
+.cart{
+    position:relative;
+}
 .title {
     margin-bottom: 5vh
 }
@@ -92,7 +95,7 @@
 
 @media(max-width:767px) {
     .cart {
-        padding: 4vh;
+        padding: 1.5vh;
         border-bottom-left-radius: unset;
         border-top-right-radius: 1rem
     }
@@ -110,6 +113,13 @@
     .summary {
         border-top-right-radius: unset;
         border-bottom-left-radius: 1rem;
+    }
+}
+@media(min-width:767px) {
+    .back-to-shop {
+        position: absolute;
+        bottom: 0;
+        margin-bottom: 1rem;  
     }
 }
 
@@ -154,9 +164,7 @@
     cursor: pointer;
 }
 
-.back-to-shop {
-    margin-top: 4.5rem;
-}
+
 
 h5 {
     margin-top: 4vh;

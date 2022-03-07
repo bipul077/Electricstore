@@ -3,7 +3,7 @@ from django.contrib.auth.forms import UserCreationForm,AuthenticationForm, Usern
 from django.contrib.auth.models import User
 from django.utils.translation import gettext, gettext_lazy as _
 from django.contrib.auth import password_validation
-from .models import Customer
+from .models import Customer,ProductReview
 
 
 class CustomerRegistrationForms(UserCreationForm):#inheriting usercreationform
@@ -30,7 +30,7 @@ class MyPasswordChangeForm(PasswordChangeForm):
     new_password2 = forms.CharField(label=_("Confirm New Password"),strip=False, widget = forms.PasswordInput(attrs={'autocomplete':'new-password','class':'form-control'}))
 
 class MyPasswordResetForm(PasswordResetForm):
-  email = forms.EmailField(
+    email = forms.EmailField(
         label=_("Email"),
         max_length=254,
         widget=forms.EmailInput(attrs={'autocomplete': 'email','class':'form-control'})
@@ -55,3 +55,8 @@ class CustomerProfileForm(forms.ModelForm):
         fields = ['name', 'locality', 'city', 'region']
         widgets = {'name':forms.TextInput(attrs={'class':'form-control'}),'locality':forms.TextInput(attrs={'class':'form-control'}), 'city':forms.TextInput(attrs={'class':'form-control'}),'region':forms.Select(attrs={'class':'form-control'})}
 
+#review add form
+class ReviewAdd(forms.ModelForm):
+    class Meta:
+        model = ProductReview
+        fields = ('review_text','review_rating')

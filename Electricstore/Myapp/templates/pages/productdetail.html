@@ -34,16 +34,16 @@
     <aside class="col-sm-7">
     <article class="card-body p-5">
         <h3 class="title mb-3">{{product.title}}</h3>
-
     <p class="price-detail-wrap"> 
         <span class="price h3 text-danger"> 
             <span class="currency">Rs </span><span class="num">{{product.discounted_price}}</span>
         </span>  
         <span style="text-decoration: line-through;">Rs </span><span class="num" style="text-decoration: line-through; font-weight: bold;" >{{product.selling_price}}</span>
     </p> <!-- price-detail-wrap .// -->
+    <br>
     <dl class="item-property">
-    <dt><span id="para1">Description</span></dt>
-    <dd><p><span id="para2">{{product.description}}</span></p></dd>
+    <dt><span id="para1">Specifications</span></dt>
+    <dd><span id="para2">{{product.description|linebreaks}}</span></dd>
     </dl>
     <dl class="param param-feature">
     <dt><span id="para3">Model#</span></dt>
@@ -51,7 +51,7 @@
     </dl>  <!-- item-property-hor .// -->
     <dl class="param param-feature">
     <dt><span id="para5">Brand</span></dt>
-    <dd><span id="para6">{{product.brand}}</span></dd>
+    <dd><span id="para6">{{product.brand.title}}</span></dd>
     </dl>  <!-- item-property-hor .// -->
     <dl class="param param-feature">
     <dt><span id="para7">Delivery</span></dt>
@@ -61,25 +61,43 @@
     <hr>
         <div class="row">
             <div class="col-sm-5">
-                <dl class="param param-inline">
-                <dt>Quantity: </dt>
+                <dl class="param param-inline" style="display: flex;">
+                <dt>Quantity:</dt>
                 <dd>
-                    <select class="form-control form-control-sm" style="width:70px;">
+                    <select class="form-control form-control-sm" style="width:70px;margin-left: 5px;">
                         <option> 1 </option>
                         <option> 2 </option>
                         <option> 3 </option>
                     </select>
                 </dd>
-                </dl>  
+                {% if request.user.is_authenticated %}
+                 <button class= "btn btn-sm btn-danger add-wishlist" data-product="{{product.id}}"  style="margin-left: 10px"> <i class="fa fa-heart" aria-hidden="true"></i><span style="font-size: 16px;"> Wishlist</span></a>
+                <!-- <a href="#" class= "add-wishlist" data-product="{{product.id}}"  style="margin-left: 10px;color: red;font-size:18px;"> <i class="fa fa-heart" aria-hidden="true"></i><span style="font-size: 16px;"> Wishlist</span></a> -->
+                {% endif %}
+                </dl>      
             </div> 
             <div class="cartbuy" style="display: flex;">
+                {% if request.user.is_authenticated %}
+                {% if item_already_in_carts %}
+                <a href="{% url 'showcart' %}" class="btn btn-warning">Go to Cart</a>
+                {% else %}
                 <form action="/add-to-cart"><!--to get the product id we do this-->
                     <input type="hidden" name="prod_id" value={{product.id}} id="prod_id">
                     <button type="submit" class="btn btn-warning"><i class="fas fa-shopping-cart"></i> Add to Carts</button>
                 </form>
+                {% endif %}
+                {% endif %}
+                {% if not request.user.is_authenticated %}
+                    <form action="/add-to-cart"><!--to get the product id we do this-->
+                        <input type="hidden" name="prod_id" value={{product.id}} id="prod_id">
+                        <button type="submit" class="btn btn-warning"><i class="fas fa-shopping-cart"></i> Add to Carts</button>
+                    </form>
+                {% endif %}
+
                 <!-- <a href="cart.html" class="btn btn-warning"><i class="fas fa-shopping-cart"></i> Add to Cart </a> -->
                 <br>
                 <a href="cart.html" class="btn btn-danger" style="margin-left: 20px;"> Buy Now </a>
+               
             </div>
         </div> 
     </article> 
@@ -87,4 +105,208 @@
     </div> 
     </div> 
   </div>
+
+   <!-- Product tab -->
+   <div class="col-md-12">
+    <div id="product-tab">
+     
+        <ul class="tab-nav">
+            <!-- <li class="active"><a data-toggle="tab" href="#tab1">Description</a></li>
+            <li><a data-toggle="tab" href="#tab2">Details</a></li> -->
+            <li class="active"><a data-toggle="tab" href="#tab3">Reviews (3)</a></li>
+        </ul>
+    </div>
+    </div>
+    <div class="centerbutton">
+        {% if user.is_authenticated %}
+            {% if canAdd %}
+                <button  data-bs-toggle="modal" data-bs-target="#ProductReview" type="button" class="btn btn-warning btn-sm reviewBtn">ADD Review</button>
+            {% endif %}
+        {% endif %}
+    </div>
+    <!-- above in data-target we write the id of model which is ProductReview -->
+
+    <div class="tab-content">
+							
+        <div class="row">
+            <!-- Rating -->
+            <div class="col-md-3">
+                <div id="rating">
+                    <div class="rating-avg">
+                        <span class="avgrating">{{avg_reviews.avg_rating}}/5</span>
+                        <div class="rating-stars">
+                    
+                            <i class="fa fa-star"></i>
+                           
+                            
+                            <!-- <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            &#9734; -->
+                        </div>
+                    </div>
+                    <ul class="rating">
+                        <li>
+                            <div class="rating-stars">
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                            </div>
+                            <div class="rating-progress">
+                                <div style="width: 80%;"></div>
+                            </div>
+                            <span class="sum">3</span>
+                        </li>
+                        <li>
+                            <div class="rating-stars">
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star-o"></i>
+                            </div>
+                            <div class="rating-progress">
+                                <div style="width: 60%;"></div>
+                            </div>
+                            <span class="sum">2</span>
+                        </li>
+                        <li>
+                            <div class="rating-stars">
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star-o"></i>
+                                <i class="fa fa-star-o"></i>
+                            </div>
+                            <div class="rating-progress">
+                                <div></div>
+                            </div>
+                            <span class="sum">0</span>
+                        </li>
+                        <li>
+                            <div class="rating-stars">
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star-o"></i>
+                                <i class="fa fa-star-o"></i>
+                                <i class="fa fa-star-o"></i>
+                            </div>
+                            <div class="rating-progress">
+                                <div></div>
+                            </div>
+                            <span class="sum">0</span>
+                        </li>
+                        <li>
+                            <div class="rating-stars">
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star-o"></i>
+                                <i class="fa fa-star-o"></i>
+                                <i class="fa fa-star-o"></i>
+                                <i class="fa fa-star-o"></i>
+                            </div>
+                            <div class="rating-progress">
+                                <div></div>
+                            </div>
+                            <span class="sum">0</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <!-- /Rating -->
+
+            <!-- Reviews -->
+            <div class="col-md-6">
+                <div id="reviews" class="reviewsed">
+                    {% if reviews %}
+                    {% for review in reviews %}
+                        <ul class="reviews">
+                            <li>
+                                <div class="review-heading">
+                                    <span class="usericons" style="display: flex"><i class="fas fa-user" style="margin: 4px 4px 0px 0px;"></i><h5 class="name">{{review.user}}</h5></span>
+                                    <!-- <p class="date">27 DEC 2018, 8:0 PM</p> -->
+                                    <div class="review-rating">
+                                        {% for star in review.review_rating|ljust:review.review_rating %}
+                                        <!-- ljust means left justify and looping the star with review_rating  -->
+                                        <i class="fa fa-star"></i>
+                                        {% endfor %}
+                                    </div>
+                                </div>   
+                                <div class="review-body">
+                                    <p>{{review.review_text}}</p>
+                                </div>
+                                <hr>
+                            </li>         
+                        </ul>
+                    {% endfor %}
+                    {% else %}
+                        <p class="nodata">Add First Review</p>
+                    <!-- <ul class="reviews-pagination">
+                        <li class="active">1</li>
+                        <li><a href="#">2</a></li>
+                        <li><a href="#">3</a></li>
+                        <li><a href="#">4</a></li>
+                        <li><a href="#"><i class="fa fa-angle-right"></i></a></li>
+                    </ul> -->
+                    {% endif %}
+                </div>
+            </div>
+            <!-- /Reviews -->
+
+            <!-- Review Form -->
+            <!-- <div class="col-md-3">
+                <div id="review-form">
+                    <form class="review-form">
+                        <input class="input" type="text" placeholder="Your Name">
+                        <input class="input" type="email" placeholder="Your Email">
+                        <textarea class="input" placeholder="Your Review"></textarea>
+                        <div class="input-rating">
+                            <span>Your Rating: </span>
+                            <div class="stars">
+                                <input id="star5" name="rating" value="5" type="radio"><label for="star5"></label>
+                                <input id="star4" name="rating" value="4" type="radio"><label for="star4"></label>
+                                <input id="star3" name="rating" value="3" type="radio"><label for="star3"></label>
+                                <input id="star2" name="rating" value="2" type="radio"><label for="star2"></label>
+                                <input id="star1" name="rating" value="1" type="radio"><label for="star1"></label>
+                            </div>
+                        </div>
+                        <button class="primary-btn">Submit</button>
+                    </form>
+                </div>
+            </div> -->
+            <!-- /Review Form -->
+        </div>
+    
+    <!-- /tab3  -->
+</div>
+
+    <!--Product Modal -->
+    <div class="modal fade" id="ProductReview" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Add Product Review</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="post" id="addForm" action="{% url 'save-review' product.id %}">
+                    <!-- submits the data without reloading the page and modal will close -->
+                {% csrf_token %}
+                <table class="table table-bordered">
+                    {{form.as_table}}
+                    <tr>
+                        <td colspan="2">
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                            <input type="reset" value="Reset" class="btn btn-primary" id="reset" />
+                        </td>
+                    </tr>
+                </table>
+                <p class="ajaxRes"></p>
+                </form>    
+            </div>
+        </div>
+        </div>
+    </div>
+    
 {% endblock content %}

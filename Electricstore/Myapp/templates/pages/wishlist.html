@@ -1,0 +1,83 @@
+{% extends 'pages/base.html' %}
+{% load static %}
+{% block title %}Buy Now{% endblock title %}
+{% block content %}
+<br>
+<h3>Wishlist</h3>
+    <hr>
+   <table class="table">
+       <thead>
+           <th>Image</th>
+           <th>Product</th>
+           <th>Action</th>
+       </thead>
+       <tbody>
+           {% for wl in wlist %}
+            <tr>
+               <td data-label="image"><img src="{{wl.product.product_image.url}}" width="100"></td>
+               <td data-label="name"><a href="/product-detail/{{wl.product.id}}">{{wl.product.title}}</a></td>
+               <td data-label="remove"><span class="remove-item" pid="{{wl.product.id}}" style="cursor: pointer;"><i class="fa fa-trash" aria-hidden="true"></i></span></td>
+            </tr>
+            <!-- <tr>
+                <td data-label="image"><img src="prod.jpg"></td>
+                <td data-label="name">Iphone</td>
+                <td data-label="remove"><i class="fa fa-trash" aria-hidden="true"></i></td>
+            </tr> -->
+            {% endfor %}
+       </tbody>
+   </table>
+<style>
+    h3{
+        text-align: center;
+    }
+    a{
+        color: black;
+    }
+    .table{
+        width: 80%;
+        border-collapse: collapse;
+        margin-left: auto; 
+        margin-right: auto;
+    }
+    .table td,.table th{
+        padding: 12px 0px;
+        border: 1px solid #ddd;
+        text-align: center;
+        font-size: 16px;
+    }
+    .table th{
+        background-color: darkblue;
+        color: #ffffff;
+    }
+    .table tbody tr:nth-child(even){
+        background-color: lightblue;
+    }
+
+    @media(max-width: 500px){
+        .table thead{
+            display: none;
+        }
+        .table,.table tbody, .table tr, .table td{
+            display: block;
+            width: 99%;
+        }
+        .table tr{
+            margin-bottom: 15px;
+        }
+        .table td{
+            text-align: right;
+            position: relative;
+        }
+        .table td::before{
+            content: attr(data-label);
+            position: absolute;
+            left: 0;
+            width: 50%;
+            padding-left: 15px;
+            font-size: 15px;
+            font-weight: bold;
+            text-align: left;
+        }
+    }
+</style>
+{% endblock content %}
