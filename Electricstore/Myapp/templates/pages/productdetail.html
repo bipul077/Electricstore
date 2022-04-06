@@ -45,10 +45,10 @@
     <dt><span id="para1">Specifications</span></dt>
     <dd><span id="para2">{{product.description|linebreaks}}</span></dd>
     </dl>
-    <dl class="param param-feature">
+    <!-- <dl class="param param-feature">
     <dt><span id="para3">Model#</span></dt>
     <dd><span id="para4">12345611</span></dd>
-    </dl>  <!-- item-property-hor .// -->
+    </dl>  item-property-hor .// -->
     <dl class="param param-feature">
     <dt><span id="para5">Brand</span></dt>
     <dd><span id="para6">{{product.brand.title}}</span></dd>
@@ -57,21 +57,24 @@
     <dt><span id="para7">Delivery</span></dt>
     <dd><span id="para8">All over Nepal</span></dd>
     </dl>  <!-- item-property-hor .// -->
+    <div class="stocks">
+        <span class="text-success" style="font-weight: bold;">In stock</span>
+    </div>
 
     <hr>
         <div class="row">
             <div class="col-sm-5">
-                <dl class="param param-inline" style="display: flex;">
-                <dt>Quantity:</dt>
-                <dd>
-                    <select class="form-control form-control-sm" style="width:70px;margin-left: 5px;">
-                        <option> 1 </option>
-                        <option> 2 </option>
-                        <option> 3 </option>
-                    </select>
-                </dd>
+                <div class="quantity">
+                    <div class="pro-qty">
+                        <span class="dec qtybtn decrement-btn">-</span>
+                        <input type="text" name="quantity" class="qty-input" value="1">
+                        <span class="dec qtybtn increment-btn newhover" pid="{{product.quantity}}">+</span>
+                        <!-- <i class="fa fa-exclamation-triangle" id="shit" aria-hidden="true"></i> -->
+                    </div>
+                    <p class="pstock">{{product.quantity}} product left in the stock</p>
+                </div>
                 {% if request.user.is_authenticated %}
-                 <button class= "btn btn-sm btn-danger add-wishlist" data-product="{{product.id}}"  style="margin-left: 10px"> <i class="fa fa-heart" aria-hidden="true"></i><span style="font-size: 16px;"> Wishlist</span></a>
+                 <button class= "btn btn-sm btn-danger add-wishlist" data-product="{{product.id}}"  style="margin-bottom: 10px"> <i class="fa fa-heart" aria-hidden="true"></i><span style="font-size: 16px;"> Wishlist</span></a>
                 <!-- <a href="#" class= "add-wishlist" data-product="{{product.id}}"  style="margin-left: 10px;color: red;font-size:18px;"> <i class="fa fa-heart" aria-hidden="true"></i><span style="font-size: 16px;"> Wishlist</span></a> -->
                 {% endif %}
                 </dl>      
@@ -113,7 +116,7 @@
         <ul class="tab-nav">
             <!-- <li class="active"><a data-toggle="tab" href="#tab1">Description</a></li>
             <li><a data-toggle="tab" href="#tab2">Details</a></li> -->
-            <li class="active"><a data-toggle="tab" href="#tab3">Reviews (3)</a></li>
+            <li class="active">Reviews (<span id="reviewcount">{{counter}}</span>)</li>
         </ul>
     </div>
     </div>
@@ -236,9 +239,10 @@
                                 <div class="review-body">
                                     <p>{{review.review_text}}</p>
                                 </div>
-                                <hr>
+                                <!-- <hr> -->
                             </li>         
                         </ul>
+                        <hr>
                     {% endfor %}
                     {% else %}
                         <p class="nodata">Add First Review</p>
@@ -307,6 +311,25 @@
             </div>
         </div>
         </div>
+    </div>
+
+    <!-- related products -->
+    <div class="relatedslider">
+        <!-- <button class="btn btn-primary" id="showbtn">Show more</button> -->
+        <h2 class="mobfcategories border-bottom pb-1">Related Products</h2>
+        <div class="owl-carousel owl-theme">
+            {% for b in related %}
+            <!-- mobile vaneko views.py ko dictionary ko mobile -->
+            <div class="mobileitem">
+                  <a href="{% url 'product-detail' b.id %}">
+                  <img src="{{b.product_image.url}}" height="200">
+                  <!-- product_image bhaneko models.y ko Product model ko product_image ho -->
+                  <p class="cap">{{b.title}}</p>
+                  <p class="pricecap">Rs {{b.discounted_price}}</p>
+                  </a>     
+            </div>
+            {% endfor %}
+      </div>        
     </div>
     
 {% endblock content %}

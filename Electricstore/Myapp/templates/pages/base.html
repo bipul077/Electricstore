@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css" integrity="sha512-sMXtMNL1zRzolHYKEujM2AqCLUR9F2C4/05cdbxjjLSRvMQIciEPCQZo++nk7go3BtSuK9kfa/s+a4f4i5pLkw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" type="text/css" href="{% static 'style/style.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'style/detail.css' %}">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/AlertifyJS/1.13.1/css/alertify.min.css" rel="stylesheet">
 
     <link rel="stylesheet" type="text/css" href="{% static 'style/font-awesome.min.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'style/themify-icons.css' %}">
@@ -41,20 +42,20 @@
                     </div>
                     <div class="col-lg-7 col-md-7">
                         <div class="advanced-search">
-                            
+                            <form action="\search">
                             <div class="input-group">
-                                <input type="text" placeholder="What do you need?">
-                                <button type="button"><i class="fa fa-search"></i></button>
+                                <input name="q" type="text" placeholder="What do you need?" style="margin-top: 10px;"/>
+                                <button type="submit"><i class="fa fa-search"></i></button>
                             </div>
+                            </form>
                         </div>
                     </div>
                     <div class="col-lg-3 text-right col-md-3">
                         <ul class="nav-right">
                             <div class="shopicons">
                                 {% if request.user.is_authenticated %}
-                                    <li class="heart-icon"><a href="{% url 'showcart' %}"><i class="fa fa-shopping-cart" style="font-size:30px;color:darkgoldenrod"><p>Cart</p></i></a></li>
-                                    <li class="cart-icon"><a href="{% url 'wishlist' %}"><i class="fa fa-heart" aria-hidden="true" style="font-size:30px;color: darkgoldenrod"><p>Wishlist</p></i></a></li>                           
-                               
+                                    <li class="heart-icon"><a href="{% url 'showcart' %}"><i class="fa fa-shopping-cart" style="font-size:30px;color:darkgoldenrod"><p>Cart{% if cartcount != 0 %}<span class="badge bg-danger" id="badge">{{cartcount}}</span>{% endif %}</p></i></a></li>
+                                    <li class="cart-icon"><a href="{% url 'wishlist' %}"><i class="fa fa-heart" aria-hidden="true" style="font-size:30px;color: darkgoldenrod"><p>Wishlist{% if wlistcount != 0 %}<span class="badge bg-danger" id="wlistbadge">{{wlistcount}}</span>{% endif %}</p></i></a></li>                           
                                 {% else %}
                                    <li class="heart-icon"><a href="{% url 'login' %}"><button class="btn btn-warning" id="logbtn">Login</button></a></li>  
                                 {% endif %}    
@@ -73,9 +74,9 @@
                         <i class="fa fa-caret-down"></i>
                         <ul class="depart-hover">
                             <li><a href="/categorylist/1">Mobiles</a></li> 
-                            <li><a href="/categorylist/2">SmartLaptops</a></li> 
-                            <li><a href="#">Home appliances</a></li>
-                            <li><a href="#">Television</a></li>
+                            <li><a href="/categorylist/2">Laptops</a></li> 
+                            <li><a href="/categorylist/3">Television</a></li>
+                            <li><a href="#">Home Appliances</a></li>
                             <li><a href="#">Refregerators</a></li>
                             <li><a href="#">Accessories/Gadgets</a></li>
                             <li><a href="#">Washing Machines</a></li>
@@ -179,8 +180,9 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js" integrity="sha512-bPs7Ae6pVvhOSiIcyUClR7/q2OAsRiovw4vAkX+zJbw3ShAeeqezq50RIIcIURq7Oa20rW2n2q+fyXBNcU9lrw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="{% static 'js/owl.js' %}"></script>
      <!-- Js Plugins -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/AlertifyJS/1.13.1/alertify.min.js"></script>
     
-     <script src="{% static 'js/jquery.slicknav.js' %}"></script>
-     <script src="{% static 'js/main.js' %}"></script> 
+    <script src="{% static 'js/jquery.slicknav.js' %}"></script>
+    <script src="{% static 'js/main.js' %}"></script> 
 </body>
 </html>

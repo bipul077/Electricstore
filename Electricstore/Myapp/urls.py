@@ -18,6 +18,8 @@ urlpatterns = [
      path('password-reset-confirm/<uidb64>/<token>/',auth_views.PasswordResetConfirmView.as_view(template_name='pages/passwordresetconfirm.html',form_class=MySetPasswordForm),name='password_reset_confirm'),
      path('password-reset-complete/',auth_views.PasswordResetCompleteView.as_view(template_name='pages/passwordresetcomplete.html'),name='password_reset_complete'),
      path('address/', views.address, name='address'),
+     path('updateprofile/<int:pk>', views.updateprofile, name='profileupdate'),
+     path('deleteprofile/<int:pk>', views.deleteprofile, name='profiledelete'),
      path('add-to-cart/',views.add_to_cart,name='add-to-cart'),
      path('cart/',views.show_cart,name='showcart'),
      path('pluscart/',views.plus_cart,name='pluscart'),#takes prod_id and send to views.plus_cart
@@ -30,5 +32,9 @@ urlpatterns = [
      path('my-wishlist/', views.my_wishlist, name='wishlist'),
      path('removeitem/',views.remove_item,name='removeitem'),
      path('categorylist/<int:cat_id>',views.CategoryListView.as_view(),name='categorylist'),
-     path('save-review/<int:pid>',views.save_review,name='save-review')
+     path('save-review/<int:pid>',views.save_review,name='save-review'),
+     path('load-more-data/<int:cat_id>',views.load_more.as_view(),name='loadmore'),
+     path('filter-data/<int:cat_id>',views.filter_data,name='filter_data'),
+     path('search/',views.search,name='search'),
+     # path('load-more-data',views.load_more,name='load_more_data')
 ]

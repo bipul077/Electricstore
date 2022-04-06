@@ -1,0 +1,21 @@
+{% for b in mobile %}
+                <div class="col-md-4 productbox">
+                    <div class="product py-4"> 
+                   
+                        <a href="/product-detail/{{b.id}}">
+                            <div class="text-center"> <img src="{{b.product_image.url}}" width="200" height="200" alt="none"> </div>
+                        </a>    
+                            <div class="about text-center">
+                                <h1><span id="prod1">{{b.title}}</span></h1> <span id="price1">Rs {{b.discounted_price}}</span>
+                            </div>                   
+                        <div class="text-center" style="color: #ffbb00;"> <i class="fa fa-star star"></i> <i class="fa fa-star star"></i> <i class="fa fa-star star"></i> <i class="fa fa-star star"></i> </div>
+                        <div class="cart-button mt-3 px-2 d-flex justify-content-center align-items-center"> 
+                            <form action="/add-to-cart"><!--to get the product id we do this-->
+                                <input type="hidden" name="prod_id" value={{b.id}} id="prod_id">
+                                <button class="btn btn-primary text-uppercase" ><span id="cart1">Add to cart</span></button>
+                            </form>
+                        </div>
+                       
+                    </div>
+                </div>
+{% endfor %} 

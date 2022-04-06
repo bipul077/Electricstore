@@ -66,6 +66,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'Myapp.template_context.get_filters',
             ],
         },
     },
@@ -129,7 +130,13 @@ STATIC_URL = '/static/'
 MEDIA_URL = "/media/"#media url is the reference url for browser to access the files over HTTP
 MEDIA_ROOT = os.path.join(BASE_DIR,"media/")#BASE_DIR means the directory of manage.py
 LOGIN_REDIRECT_URL = '/profile/'
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'bipulratna07@gmail.com'
+EMAIL_HOST_PASSWORD = 'makhan123'
 
 
 # Default primary key field type

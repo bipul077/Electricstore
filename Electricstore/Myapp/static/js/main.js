@@ -20,6 +20,7 @@
     $(window).on('load', function () {
         $(".loader").fadeOut();
         $("#preloder").delay(200).fadeOut("slow");
+        $(".ajaxloading").hide();
     });
 
     /*------------------
@@ -37,14 +38,17 @@
         prependTo: '#mobile-menu-wrap',
         allowParentLinks: true
     });
+   
 
 })(jQuery);
 
 $('.plus-cart').click(function () {
     console.log("plus-clicked")
     var id = $(this).attr("pid").toString();
-    var eml = this.parentNode.children[1]
+    var emls = this.parentNode.children[1]
+    var eml = this.parentNode.children[2]
     console.log("yes"+id)
+    console.log("yeseml "+eml)
     $.ajax({
         type: "GET",
         url: "/pluscart",
@@ -53,20 +57,28 @@ $('.plus-cart').click(function () {
         },
         success: function(data){//if success then success function is called
             console.log(data)
-            console.log("success")
-            eml.innerText = data.quantity
-            document.getElementById("amount").innerText = data.amount
-            document.getElementById("totalamount").innerText = data.totalamount
-
-        }
-            
+            if(data.quantity<=data.pquantity){
+                console.log("success")
+                emls.innerText = data.quantity
+                document.getElementById("amount").innerText = data.amount
+                document.getElementById("totalamount").innerText = data.totalamount
+                
+            }
+            else{
+                alertify.error("product will be out of stock if quantity will be more than "+ data.pquantity)
+                // $(".plus-cart").hide()
+                // emls.hide()
+                eml.addClass('disabled').removeClass('plus-cart')          
+            }
+        }      
     })
 })
 
 $('.minus-cart').click(function () {
     console.log("minus-clicked")
     var id = $(this).attr("pid").toString();
-    var eml = this.parentNode.children[1]
+    var emls = this.parentNode.children[1]
+    var eml = this.parentNode.children[2]
     console.log("yes"+id)
     $.ajax({
         type: "GET",
@@ -76,10 +88,15 @@ $('.minus-cart').click(function () {
         },
         success: function(data){//if success then success function is called
             console.log(data)
-            console.log("success")
-            eml.innerText = data.quantity
-            document.getElementById("amount").innerText = data.amount
-            document.getElementById("totalamount").innerText = data.totalamount
+            if(data.quantity>=0){
+                console.log("success")
+                emls.innerText = data.quantity
+                document.getElementById("amount").innerText = data.amount
+                document.getElementById("totalamount").innerText = data.totalamount
+            }
+            // else{
+            //     alertify.error("product quantity can't be zero")
+            // }
 
         }
             
@@ -103,17 +120,51 @@ $('.remove-cart').click(function () {
             document.getElementById("amount").innerText = data.amount
             document.getElementById("totalamount").innerText = data.totalamount
             eml.parentNode.parentNode.parentNode.remove()
-
+            console.log('badgecount'+data.cartcount)
+            document.getElementById("badge").innerText = data.cartcount      
         }
             
     })
 })
 
+//increment btn in product detail
+$('.increment-btn').click(function (e) {
+    e.preventDefault();
+    var proquan =  $(this).attr("pid").toString();
+    var inc_value = $(this).closest('.row').find('.qty-input').val();
+    var value = parseInt(inc_value,10);
+    value = isNaN(value) ? 0 : value;
+    console.log("goodebst "+proquan)
+    if(value < proquan)
+    {
+        value++;
+        $(this).closest('.row').find('.qty-input').val(value);
+    }
+    else{
+        $(this).removeClass('qtybtn');
+        $(this).addClass('newhover');
+    }
+});
+//decrement btn in product detail
+$('.decrement-btn').click(function (e) {
+    e.preventDefault();
+
+    var inc_value = $(this).closest('.row').find('.qty-input').val();
+    var value = parseInt(inc_value,10);
+    value = isNaN(value) ? 0 : value;
+    if(value > 1)
+    {
+        value--;
+        $(this).closest('.row').find('.qty-input').val(value);
+    }
+});
+
 //Wishlist
 $(".add-wishlist").on('click',function(){
+    alertify.success("Product has been moved to Wishlist");
     var pid = $(this).attr('data-product');
     var vm = $(this);
-    // console.log("product_id"+pid);
+    console.log("product_id"+pid);
     //Ajax
     $.ajax({
         url:"/add-wishlist",
@@ -125,6 +176,8 @@ $(".add-wishlist").on('click',function(){
             if(res.bool==true){
                 vm.addClass('disabled').removeClass('add-wishlist');
             }
+            console.log("wowow"+res.wlistcount)
+            document.getElementById("wlistbadge").innerText = res.wlistcount
         }
     });
     //EndAjax
@@ -146,6 +199,7 @@ $('.remove-item').click(function () {
         success: function(data){//if success then success function is called
             console.log("success")
             eml.parentNode.parentNode.remove()
+            document.getElementById("wlistbadge").innerText = data.wlistcount
 
         }
             
@@ -181,11 +235,15 @@ $("#addForm").submit(function(e){
                 _html+='</hr>'; 
                 _html+='</li>'; 
                 _html+='</ul>'; 
+                _html+='<hr>';
 
                 // console.log($(".reviews").prepend(_html))//for showing at top same like stack
                 $(".reviewsed").prepend(_html);//prepend data
                 $("#ProductReview").modal('hide');//hide modal
                 $(".nodata").hide()//hide pclass nodata after review is added
+                console.log(res.counter)
+                document.getElementById("reviewcount").innerText = res.counter
+                // $(".reviewcount").innerText = res.counter
 
                 //avg rating
                 console.log(res.avg_reviews.avg_rating)
@@ -195,4 +253,88 @@ $("#addForm").submit(function(e){
         }
     });
     e.preventDefault();//helps to prevent the page from reloading
+});
+
+$("#loadmore").on('click',function(){
+    var currentproducts = $(".productbox").length;//this currentproducts means how many products are shown in productlist html
+    var limit=$(this).attr('data-limit');//this is the number of products we want to show in a row
+    var total = $(this).attr('data-total');//this total means the total products we have in database
+    var catid = $(this).attr('catid');
+    console.log("hahha"+currentproducts,limit,total,catid)
+    var url = "/load-more-data/"+ catid;
+    console.log("url"+ url)
+    //start ajax
+    $.ajax({
+        url: url,
+        data: {//this data is sent to the server
+            limit: limit,
+            curproducts: currentproducts
+        },
+        dataType:'json',
+        beforeSend:function(){//data fetch hune agadi chalne code when users click on load more button
+            $("#loadmore").attr('disabled',true);
+            $(".load-more-icon").addClass('fa-spin');
+        },
+        success:function(res){//catches the data which is given by views.py
+            console.log("success")
+            $("#productlists").append(res.datas);
+            $("#loadmore").attr('disabled',false);
+            $(".load-more-icon").removeClass('fa-spin');
+
+            var curtotalproducts = $(".productbox").length;
+            if(curtotalproducts==total){
+                $("#loadmore").remove();
+            }
+        }
+            
+    })
+    //end ajax
+})
+
+// for filtering price of product list
+$(".form-check-input").on('click',function(){
+    console.log("clicked baby");
+    var catid = $(this).attr('catid');
+    var url = "/filter-data/"+ catid;
+    var filterObj = {};
+    $(".form-check-input").each(function(index,ele){//looping for each iteration
+        var filterval = $(this).val();//value dinxa form-check-input ko
+        var filterkey = $(this).attr('data-filter');//data-filter attribute ma lekheko key dinxa i.e.brand which is defined under .form-check-input class
+        // console.log(filterval,filterkey);
+        filterObj[filterkey]=Array.from(document.querySelectorAll('input[data-filter='+filterkey+']:checked')).map(function(el){//filterobj vane array ma click gareko filter ko id pass garauna hamile esto use gareko
+            return el.value;
+       });
+    });
+    console.log(filterObj)
+
+    $.ajax({
+        url:url,
+        data:filterObj,
+        dataType:'json',
+        beforeSend:function(){//It will show things until we get the response from server
+            $(".ajaxloading").show();
+        },
+        success:function(res){
+            console.log("success");
+            $("#productlists").html(res.data);
+            $(".ajaxloading").hide();
+        }
+
+    });
+});
+
+
+// Filter Product According to the price
+$("#maxPrice").on('blur',function(){
+    var _min=$(this).attr('min');
+    var _max=$(this).attr('max');
+    var _value=$(this).val();
+    console.log(_value,_min,_max);
+    if(_value < parseInt(_min) || _value > parseInt(_max)){
+        alert('Values should be '+_min+'-'+_max);
+        $(this).val(_min);
+        $(this).focus();
+        $("#rangeInput").val(_min);
+        return false;
+    }
 });

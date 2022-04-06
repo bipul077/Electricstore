@@ -11,32 +11,66 @@ from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator#for class based function
 from django.db.models import Avg
+from django.template.loader import render_to_string
 
 class ProductView(View):
     def get(self,request):
+        user = request.user
         banners = Banner.objects.all().order_by('-id')
         featured = Product.objects.filter(is_featured=True)
         catfeatured = Category.objects.filter(is_featured=True)
         mobile = Product.objects.filter(category=1)
         print("hahahah"+ str(mobile))
+        # if request.user.is_authenticated:
+        #     cart = Cart.objects.filter(user=user)
+        #     cartcount = cart.count()
+        #     wlist = Wishlist.objects.filter(user=user)
+        #     wlistcount = wlist.count()
+        # return render(request,'pages/home.html',{'mobile':mobile,'featured':featured,'catfeatured':catfeatured,'banners':banners,'cartcount':cartcount,'wlistcount':wlistcount})
         # laptop = Product.objects.filter(category=2)
+        # else:
         return render(request,'pages/home.html',{'mobile':mobile,'featured':featured,'catfeatured':catfeatured,'banners':banners})
 
 class CategoryListView(View):
     def get(self, request,cat_id):
         category = Category.objects.get(id=cat_id)
-        mobile = Product.objects.filter(category=category).order_by('-id')#fetch the latest product according to category with order_by
-        return render(request,'pages/mobiles.html',{'mobile':mobile})
-    
+        total_data = Product.objects.filter(category=category).count()#counts the number of products in 
+        products = Product.objects.filter(category=category).order_by('-id')[:3]#fetch the latest product according to category with order_by,[:3]fetches first 3 products only
+        prod = Product.objects.filter(category=category)       
+        a = []       
+        for b in prod:
+            print("ooops i got hurt"+str(b.brand))  
+            a.append(b.brand)   
+            # print("ok boy "+str(a)) 
+        a = list(dict.fromkeys(a))#remove duplicates data in the list
+        # print("ok sir "+str(a))
+        return render(request,'pages/productlist.html',
+        {
+            'products':products,
+            'totaldata':total_data,
+            'categoryid':category,
+            'a':a
+            # 'cartcount':cartcount,
+            # 'wlistcount':wlistcount
+        }
+        )
+
+@method_decorator(login_required, name='dispatch')        
 class ProductDetailView(View):
     def get(self, request, pk):
+        user = request.user
         product = Product.objects.get(pk=pk)
+        print("product++"+str(product.category))
         prod = get_object_or_404(Product, pk=pk)
+        quan = product.quantity
         photos = Multipleimage.objects.filter(prod=prod)
+        related_products = Product.objects.filter(category=product.category).exclude(id=pk)[:4]
         reviewForm = ReviewAdd()#getting the reviewform from forms.py
+            
 
         #checking if the user has already submitted the review or not
         canAdd = True
+        cartcount = 0
         if request.user.is_authenticated:
             reviewCheck = ProductReview.objects.filter(user=request.user,product=product).count()
         # if request.user.is_authenticated:
@@ -45,6 +79,8 @@ class ProductDetailView(View):
 
         #Fetch reviews
         reviews = ProductReview.objects.filter(product=product)
+        reviewcounter = ProductReview.objects.filter(product=product).count()
+        print("counter"+str(reviewcounter))
 
         #Fetch avf rating for reviews
         avg_reviews = ProductReview.objects.filter(product=product).aggregate(avg_rating=Avg('review_rating'))#review rating ko average jhikalna use gareko aggregate
@@ -52,7 +88,23 @@ class ProductDetailView(View):
         item_already_in_carts = False
         if request.user.is_authenticated:
             item_already_in_carts = Cart.objects.filter(Q(product=product.id)&Q(user=request.user)).exists()#if exists then it becomes true, compares the product and user with cart table product id and user
-        return render(request,'pages/productdetail.html',{'product':product,'photos':photos,'item_already_in_carts':item_already_in_carts,'form':reviewForm,'canAdd':canAdd,'reviews':reviews,'avg_reviews':avg_reviews})
+        
+        return render(request,'pages/productdetail.html',
+        {
+            'product':product,
+            'photos':photos,
+            'item_already_in_carts':item_already_in_carts,
+            'form':reviewForm,
+            'canAdd':canAdd,
+            'reviews':reviews,
+            'avg_reviews':avg_reviews,
+            'related':related_products,
+            'quan':quan,
+            'counter':reviewcounter,
+            # 'cartcount':cartcount,
+            # 'wlistcount':wlistcount
+        }
+        )
 
 class CustomerRegistrationView(View):
     def get(self, request):
@@ -62,9 +114,12 @@ class CustomerRegistrationView(View):
     def post(self,request):
         form = CustomerRegistrationForms(request.POST)
         if form.is_valid():
-            messages.success(request,'You have been succesfully registered!')
+            name = form.cleaned_data['username']
+            messages.success(request,'Account has been created for '+str(name)+'. Please Login')
             form.save()
-        return render(request,'pages/signup.html',{'forms':form})
+            return redirect('/accounts/login')
+        else:
+             return render(request,'pages/signup.html',{'forms':form})
 
 @method_decorator(login_required, name='dispatch')
 class ProfileView(View):
@@ -82,8 +137,26 @@ class ProfileView(View):
             region = form.cleaned_data['region']
             reg = Customer(user=usr,name=name,locality=locality,city=city,region=region)
             reg.save()
-            messages.success(request,'Congrats!profile Update successfully')
+            messages.success(request,'Congrats!Address saved successfully')
         return render(request,'pages/profile.html',{'form':form,'active':'btn-primary'})
+
+def updateprofile(request,pk):
+    prof = Customer.objects.get(id=pk)#objects.get garyo vane hamile Customer models.py ma return gareko kura haru dinxa
+    print("madme "+str(prof))
+    form = CustomerProfileForm(instance=prof)#with the instance we will get the value of that customer locality,username etc to show on the profileform
+    context = {'form':form,'active':'btn-primary'}
+    if request.method == 'POST':
+        form = CustomerProfileForm(request.POST,instance=prof)
+        if form.is_valid():
+            form.save()
+            return redirect('/address')
+    return render(request,'pages/profile.html',context)
+
+def deleteprofile(request,pk):
+    prof = Customer.objects.get(id=pk)
+    print("haha"+str(prof))
+    prof.delete()
+    return redirect('/address')
 
 @login_required
 def address(request):
@@ -104,7 +177,7 @@ def show_cart(request):
     if request.user.is_authenticated:
         user = request.user
         cart = Cart.objects.filter(user=user)#matches with the current user and user in table
-        print(cart)
+        print("goodgood"+ str(cart))
         amount = 0.0
         shipping_amount = 70.0
         total_amount = 0.0
@@ -122,10 +195,13 @@ def show_cart(request):
 def plus_cart(request):
     # if request.method == 'GET':
     prod_id = request.GET['prod_id']
-    print("yesno"+prod_id)
+    print("yesno"+prod_id)  
+    productkey = Product.objects.get(id=prod_id)
+    print("quantity "+str(productkey.quantity))
     c = Cart.objects.get(Q(product=prod_id) & Q(user=request.user))#using Q property
     c.quantity += 1
-    c.save()
+    if(c.quantity<=productkey.quantity):    
+        c.save()
     amount = 0.0
     shipping_amount = 70.0
     cart_product = [p for p in Cart.objects.all() if p.user == request.user]#checks all the objects of Cart module with current user
@@ -135,16 +211,18 @@ def plus_cart(request):
 
     data = {
         'quantity': c.quantity,
+        'pquantity':productkey.quantity,
         'amount':amount,
         'totalamount': amount + shipping_amount
         }
-    return JsonResponse(data)    
+    return JsonResponse(data)  
 
 
 def minus_cart(request):
     # if request.method == 'GET':
     prod_id = request.GET['prod_id']
     print("yesno"+prod_id)
+    productkey = Product.objects.get(id=prod_id)
     c = Cart.objects.get(Q(product=prod_id) & Q(user=request.user))#using Q property
     c.quantity -= 1
     c.save()
@@ -157,6 +235,7 @@ def minus_cart(request):
 
     data = {
         'quantity': c.quantity,
+        'pquantity':productkey.quantity,
         'amount':amount,
         'totalamount': amount + shipping_amount
         }
@@ -168,6 +247,8 @@ def remove_cart(request):
     print("yesno"+prod_id)
     c = Cart.objects.get(Q(product=prod_id) & Q(user=request.user))#using Q property
     c.delete()
+    Cartcount = Cart.objects.filter(user=request.user).count()
+    print("cartcount"+str(Cartcount))
     amount = 0.0
     shipping_amount = 70.0
     cart_product = [p for p in Cart.objects.all() if p.user == request.user]#checks all the objects of Cart module with current user
@@ -177,7 +258,8 @@ def remove_cart(request):
 
     data = {
         'amount':amount,
-        'totalamount': amount + shipping_amount
+        'totalamount': amount + shipping_amount,
+        'cartcount' : Cartcount
         }
     return JsonResponse(data)
 
@@ -205,7 +287,11 @@ def payment_done(request):
     customer = Customer.objects.get(id=custid)#we get the customer object by matching with customer id
     cart = Cart.objects.filter(user=user)
     for c in cart:
+        # To decrease the product quanaity from available stock
+        orderproduct = Product.objects.filter(id=c.product_id).first()
+        orderproduct.quantity = orderproduct.quantity - c.quantity
         OrderPlaced(user=user, customer=customer, product=c.product, quantity=c.quantity).save()
+        orderproduct.save()
         c.delete()
     return redirect("orders")    
 
@@ -213,7 +299,6 @@ def payment_done(request):
 def orders(request):
     op = OrderPlaced.objects.filter(user=request.user)
     return render(request, 'pages/orders.html',{'order_placed':op})
-
 
 
 def add_wishlist(request):
@@ -230,8 +315,10 @@ def add_wishlist(request):
             product = product,
             user = request.user
         )
+        wlistcount = Wishlist.objects.filter(user=request.user).count()
         data = {
-            'bool': True
+            'bool': True,
+            'wlistcount':wlistcount
         }
     return JsonResponse(data)
 
@@ -245,7 +332,12 @@ def remove_item(request):
     print("yesno"+prod_id)
     w = Wishlist.objects.get(Q(product=prod_id) & Q(user=request.user))#using Q property
     w.delete()
-    return render(request, 'pages/wishlist.html')
+    wlistcount = Wishlist.objects.filter(user=request.user).count()
+    data = {
+        'wlistcount' : wlistcount
+        }
+    return JsonResponse(data)
+    # return render(request, 'pages/wishlist.html')
 
 #save review
 def save_review(request,pid):#getting the product id
@@ -254,7 +346,7 @@ def save_review(request,pid):#getting the product id
     review = ProductReview.objects.create(#database ma save hunxa
         user=user,
         product=product,
-        review_text = request.POST['review_text'],#yo vaneko forms.py ko ReviewAdd ko review text ho jun hamile html ma lekhxau review text ma tei database ma save hunxa
+        review_text = request.POST['review_text'],#yo vaneko forms.py ko ReviewAdd ko review text ho jun hamile html ma lekhxau review text ma tei database ma save hunxa + yo chai main.js ma addform ko ajax ko data(attribute) bata send vako ho
         review_rating = request.POST['review_rating'],
     )
     data={#for showing in network console
@@ -262,8 +354,40 @@ def save_review(request,pid):#getting the product id
         'review_text':request.POST['review_text'],
         'review_rating':request.POST['review_rating']
     }
-
+    reviewcounter = ProductReview.objects.filter(product=product).count()
     #fetch avg rating for reviews
     avg_reviews = ProductReview.objects.filter(product=product).aggregate(avg_rating=Avg('review_rating'))#review rating ko average jhikalna use gareko aggregate
-    return JsonResponse({'boolean':True,'data':data,'avg_reviews':avg_reviews})    #yo main.js ko respective jqquery ko success function bata catch hunxa
+    return JsonResponse({'boolean':True,'data':data,'avg_reviews':avg_reviews,'counter':reviewcounter})    #yo main.js ko respective jqquery ko success function bata catch hunxa
 
+#loadmore
+class load_more(View):
+    def get(self, request,cat_id):
+        start=int(request.GET['curproducts'])#yo chai main.js ko loadmore function ko ajax ko data bata send vako ho jun hamile esma get garxau
+        limit=int(request.GET['limit'])
+        category = Category.objects.get(id=cat_id)
+        # total_data = Product.objects.filter(category=category).count()#counts the number of products in 
+        mobile = Product.objects.filter(category=category).order_by('-id')[start:start+limit]#fetch the latest product according to category with order_by,[:3]fetches first 3 products only
+        t = render_to_string('ajax/productlist.html',#returning product list page to t variable with the help of render_to_string
+        {
+            'mobile':mobile,
+        })
+        return JsonResponse({'datas':t})
+
+#filterproducts
+def filter_data(request,cat_id):
+    brands = request.GET.getlist('brand[]')
+    category = Category.objects.get(id=cat_id)
+    allproducts = Product.objects.filter(category=category).order_by('-id').distinct()#order_by('-id') gives recent first,distinct helps to omit duplicate products
+    if len(brands)>0:#in other words if brands exist
+        allproducts = allproducts.filter(brand__id__in=brands).distinct()
+    t = render_to_string('ajax/productlist.html',# creates template to the string and returning product list page to t variable with the help of render_to_string
+        {
+            'mobile':allproducts,
+        })
+    return JsonResponse({'data':t})
+
+#search
+def search(request):
+    q = request.GET['q'] 
+    data = Product.objects.filter(title__icontains=q).order_by('-id')
+    return render(request,'pages/search.html',{'data':data})   

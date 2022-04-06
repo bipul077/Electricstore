@@ -60,6 +60,7 @@ class Product(models.Model):
   brand = models.ForeignKey(Brand,on_delete=models.CASCADE)
   category = models.ForeignKey(Category,on_delete=models.CASCADE)
   product_image = models.FileField(upload_to='img/%m', blank = True)
+  quantity = models.IntegerField(null=False,blank=False,default=1)
   is_featured = models.BooleanField(default=False)
   def __str__(self):
     return str(self.id) + " " + str(self.title)
