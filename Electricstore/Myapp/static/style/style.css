@@ -94,11 +94,17 @@ a:focus {
 .inner-header .logo a {
 	display: inline-block;
 }
-
+/* search */
 .inner-header .advanced-search {
 	height: 45px;
 	border: 1px solid #ebebeb;
 	margin-top: 15px;
+}
+.searchwala{
+	padding: 0;
+}
+.input-group input{
+	background-color: white;
 }
 
 .inner-header .advanced-search .input-group {
@@ -690,7 +696,7 @@ a:focus {
 	position: relative;
 }
 .bodyhtml{
-	padding-bottom: 20px;
+	padding-bottom: 230px;
 }
 .frow{
     display: flex;
@@ -702,18 +708,15 @@ a:focus {
     background-color: #333;
     margin: auto;
 }
-@media screen and (min-width:900px){
-	.bodyhtml{
-		padding-bottom: 230px;
-	}
+ /* @media screen and (max-width:1000px){
 	.footer{
 		position: absolute;
 		bottom: 0;
 	}
-}
+}  */
 .footer{
-	/* position: absolute;
-	bottom: 0; */
+	position: absolute;
+	bottom: 0;
 	width: 100%;
     background-color: #24262b;
     padding: 20px 0;
@@ -834,14 +837,26 @@ ul{
 	font-size: 14px; 
     
 }
+.slider3{
+	border: 1px solid #d8d5d5;
+}
 .carousel-inner img{
     height: 500px;
+}
+/* .slider3 .carousel-inner img{
+	height: auto;
+} */
+.slider .carousel-inner img{
+	height: 600px;
 }
 a{
     text-decoration: none;
 }
 @media screen and (max-width:1000px){
-    .carousel-inner img{
+    .slider .carousel-inner img{
+        height: 200px;
+    }
+	.slider3 .carousel-inner img{
         height: auto;
     }
 	

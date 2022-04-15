@@ -18,7 +18,7 @@ class Customer(models.Model):
   city = models.CharField(max_length=200)
   region = models.CharField(choices=REGION_CHOICES,max_length=50)
   def __str__(self):
-      return f"{self.id}, {self.user}, {self.name}"
+      return f"{self.locality}, {self.city}, {self.region}"
 
 CATEGORY_CHOICES = (
   ('M','Mobile'),
@@ -33,7 +33,7 @@ class Category(models.Model):
 
 
   def __str__(self):
-    return str(self.id) + " " + str(self.title)
+    return str(self.title)
 
 class Banner(models.Model):
   img = models.ImageField(upload_to='banner_imgs/')

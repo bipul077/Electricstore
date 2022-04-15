@@ -11,7 +11,11 @@
 }
 body{
     overflow-x: hidden;
+    margin: 0;
 }
+.row {
+    margin: 0;
+} 
 
  #product-tab {
     margin-top: 10px;
@@ -114,6 +118,9 @@ ul, ol {
   display: flex;
   justify-content: center;
 } */
+.card{
+  border: 1px solid #b2b2b2;
+}
 #product-tab {
   margin-top: 10px;
 }
@@ -188,9 +195,11 @@ ul, ol {
 }
 
 .rating-avg .rating-stars>i, .rating .rating-stars>i {
-  color: #E4E7ED;
+  color: red;
 }
-
+.red-color {
+  color: #D10024;
+}
 .rating-avg .rating-stars>i.fa-star, .rating .rating-stars>i.fa-star {
   color: #D10024;
 }
@@ -348,3 +357,12 @@ ul, ol {
 		width:95%;
 	}
 }
+
+/* buynow btn css */
+#buynowbtn{
+  margin-left: 90px;
+  width: 100px;
+  height: 36px;
+  margin-top: 12px;
+}
+

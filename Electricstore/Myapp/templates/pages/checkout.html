@@ -2,12 +2,19 @@
 {% load static %}
 {% block title %}Checkout{% endblock title %}
 {% block content %}
+
+{% if messages %}
+{% for message in messages %}
+    <p {% if message.tags %} class="alert {{message.tags}} mb-5 text-center" {% endif %}>{{message}}</p>
+{% endfor %}
+{% endif %} 
+
 <main class="page payment-page">
     <section class="payment-form dark">
       <div class="container">
         <div class="block-heading">
           <h2>Payment</h2>
-        <form action="/paymentdone">
+        <form action="/paymentdone" id="paymentform">
           <div class="products">
             <h3 class="title">Checkout</h3>
             {% for item in cart_items %}
@@ -22,7 +29,7 @@
           <div class="card-details">
             <h4>Select Shipping Address</h4>
             <hr>
-            
+            {% if add %}        
               {% for ad in add %}  
               <div class="card">
                 <div class="card-body">
@@ -31,17 +38,25 @@
                 </div>
               </div>
                 <div class="form-check mt-2 mb-5">
-                  <input class="form-check-input" type="radio" name="custid" id="custadd((forloop.counter}}" value="{{ad.id}}"><!--we set id name so like this so that the rediobuttons can be only clicked one at a time-->
+                  <input class="form-check-input" type="radio" name="custid" id="custadd((forloop.counter}}" value="{{ad.id}}" checked="checked"><!--we set id name so like this so that the rediobuttons can be only clicked one at a time-->
                   <label class="form-check-label fw-bold" for="custadd((forloop.counter}}">
                     Address: {{forloop.counter}} </label>
                 </div>
                 {% endfor %}
+            {% else %} 
+                <p><b>Please list your address by going to your profile page.</p></b>
+            {% endif %}
                 <div class="text-end">
-                  <button type="submit" class="btn btn-warning mt-3 px-5 fw-bold">Continue</button>
+                  <button type="submit" class="btn btn-warning mt-3 mb-3 w-100 px-0 fw-bold">Pay(Cash on Delivery)</button>
+                </div> 
+                  <!-- Set up a container element for the button -->  
+                <div id="paypal-button-container"></div>
+                
                 </div>
              
             </div>
         </form>
+        <!-- <button class="btn btn-warning mt-3 mb-3 px-5 fw-bold">Continue</button> -->
       </div>
     </section>
   </main>
@@ -183,3 +198,45 @@
 }
  </style> 
 {% endblock content %}
+{% block payment-gateway %} 
+<!-- Include the PayPal JavaScript SDK -->
+<script src="https://www.paypal.com/sdk/js?client-id=AYp3Ay2e983bbUqhCKQKTKVzF7tHzTOYSrmHfTX57oq5kFwuk_-ZfYvf67EtWKj7gYCPRw4LQ1iixJaY&currency=USD"></script>
+
+<script>
+    
+    // Render the PayPal button into #paypal-button-container
+    paypal.Buttons({
+        // Set up the transaction
+        createOrder: function(data, actions) {
+            return actions.order.create({
+                purchase_units: [{
+                    amount: {
+                        value: '{{nrsamnt}}'
+                    }
+                }]
+            });
+        },
+
+
+
+        // Finalize the transaction
+    onApprove: function(data, actions) {
+        return actions.order.capture().then(function(orderData) {
+            // Successful capture! For demo purposes:
+            console.log('Capture result', orderData, JSON.stringify(orderData, null, 2));
+            var transaction = orderData.purchase_units[0].payments.captures[0];
+            alert('Transaction '+ transaction.status + ': ' + transaction.id + '\n\nSee console for all available details');
+            document.getElementById("paymentform").submit();
+            // Replace the above to show a success message within this page, e.g.
+            // const element = document.getElementById('paypal-button-container');
+            // element.innerHTML = '';
+            // element.innerHTML = '<h3>Thank you for your payment!</h3>';
+            // Or go to another URL:  actions.redirect('thank_you.html');
+        });
+    }
+
+
+    }).render('#paypal-button-container');
+
+</script>
+{% endblock payment-gateway %}

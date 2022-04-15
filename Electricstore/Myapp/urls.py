@@ -21,6 +21,7 @@ urlpatterns = [
      path('updateprofile/<int:pk>', views.updateprofile, name='profileupdate'),
      path('deleteprofile/<int:pk>', views.deleteprofile, name='profiledelete'),
      path('add-to-cart/',views.add_to_cart,name='add-to-cart'),
+      path('buynow/',views.add_to_buynow,name='buynow'),
      path('cart/',views.show_cart,name='showcart'),
      path('pluscart/',views.plus_cart,name='pluscart'),#takes prod_id and send to views.plus_cart
      path('minuscart/',views.minus_cart,name='minuscart'),

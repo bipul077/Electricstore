@@ -8,7 +8,7 @@
         <div class="row">
             <aside class="col-sm-5 border-right">
                  
-                <div class="slider2">
+                <div class="slider3">
                     <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
                     <div class="carousel-inner">
                         {% for p in photos %}
@@ -66,10 +66,13 @@
             <div class="col-sm-5">
                 <div class="quantity">
                     <div class="pro-qty">
-                        <span class="dec qtybtn decrement-btn">-</span>
-                        <input type="text" name="quantity" class="qty-input" value="1">
-                        <span class="dec qtybtn increment-btn newhover" pid="{{product.quantity}}">+</span>
-                        <!-- <i class="fa fa-exclamation-triangle" id="shit" aria-hidden="true"></i> -->
+                        <form action="/buynow">
+                            <span class="dec qtybtn decrement-btn">-</span>
+                            <input type="text" name="quantity" class="qty-input" value="1" id="quantity">
+                            <span class="dec qtybtn increment-btn newhover" pid="{{product.quantity}}">+</span>
+                            <input type="hidden" name="prod_id" value={{product.id}} id="prod_id"><!--to get the product id we do this -->
+                            <button type="submit" class="btn btn-danger" id="buynowbtn">Buy now</button>
+                        </form>
                     </div>
                     <p class="pstock">{{product.quantity}} product left in the stock</p>
                 </div>
@@ -99,7 +102,7 @@
 
                 <!-- <a href="cart.html" class="btn btn-warning"><i class="fas fa-shopping-cart"></i> Add to Cart </a> -->
                 <br>
-                <a href="cart.html" class="btn btn-danger" style="margin-left: 20px;"> Buy Now </a>
+                <!-- <a href="cart.html" class="btn btn-danger" style="margin-left: 20px;"> Buy Now </a> -->
                
             </div>
         </div> 
@@ -136,10 +139,28 @@
             <div class="col-md-3">
                 <div id="rating">
                     <div class="rating-avg">
-                        <span class="avgrating">{{avg_reviews.avg_rating}}/5</span>
+                        {% if avg_reviews.avg_rating %}
+                            <span class="avgrating">{{avg_reviews.avg_rating|floatformat:1}}/5</span>
+                        {% else %}
+                            <span class="avgrating">0/5</span>
+                        {% endif %}    
+                            
                         <div class="rating-stars">
-                    
-                            <i class="fa fa-star"></i>
+                            
+                            {% if avg_reviews.avg_rating %}
+                            {% for star in avg_reviews.avg_rating|floatformat:1|ljust:avg_reviews.avg_rating %}
+                            <!-- ljust means left justify and looping the star with review_rating  -->
+                            <span class="bi bi-star-fill red-color"></span>                    
+                            {% endfor %}
+                            
+                            <!-- <span class="bi bi-star{% if avg_reviews.avg_rating == 3.5 %}-half red-color{% endif %}" aria-hidden="true"></span> -->
+                            {% if avg_reviews.avg_rating > 1 and avg_reviews.avg_rating < 2 %}<span class="bi bi-star-half red-color" aria-hidden="true"></span>{% endif %}
+                            {% if avg_reviews.avg_rating > 2 and avg_reviews.avg_rating < 3 %}<span class="bi bi-star-half red-color" aria-hidden="true"></span>{% endif %}
+                            {% if avg_reviews.avg_rating > 3 and avg_reviews.avg_rating < 4 %}<span class="bi bi-star-half red-color" aria-hidden="true"></span>{% endif %}
+                            {% if avg_reviews.avg_rating > 4 and avg_reviews.avg_rating < 5 %}<span class="bi bi-star-half red-color" aria-hidden="true"></span>{% endif %}
+                            {% endif %}
+ 
+                            <!-- <span class="bi bi-star-half red-color"> </span> -->
                            
                             
                             <!-- <i class="fa fa-star"></i>
@@ -221,7 +242,7 @@
 
             <!-- Reviews -->
             <div class="col-md-6">
-                <div id="reviews" class="reviewsed">
+                <div id="reviews" class="reviewsed" style="max-height: 300px; overflow: auto;">
                     {% if reviews %}
                     {% for review in reviews %}
                         <ul class="reviews">

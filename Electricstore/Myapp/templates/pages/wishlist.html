@@ -3,34 +3,44 @@
 {% block title %}Buy Now{% endblock title %}
 {% block content %}
 <br>
+<div class="wishlistcon">
 <h3>Wishlist</h3>
     <hr>
-   <table class="table">
+    {% if wlist %}
+    <table class="table">
        <thead>
            <th>Image</th>
            <th>Product</th>
            <th>Action</th>
        </thead>
        <tbody>
-           {% for wl in wlist %}
-            <tr>
-               <td data-label="image"><img src="{{wl.product.product_image.url}}" width="100"></td>
-               <td data-label="name"><a href="/product-detail/{{wl.product.id}}">{{wl.product.title}}</a></td>
-               <td data-label="remove"><span class="remove-item" pid="{{wl.product.id}}" style="cursor: pointer;"><i class="fa fa-trash" aria-hidden="true"></i></span></td>
-            </tr>
-            <!-- <tr>
-                <td data-label="image"><img src="prod.jpg"></td>
-                <td data-label="name">Iphone</td>
-                <td data-label="remove"><i class="fa fa-trash" aria-hidden="true"></i></td>
-            </tr> -->
-            {% endfor %}
+          
+            {% for wl in wlist %}
+                <tr>
+                <td data-label="image"><img src="{{wl.product.product_image.url}}" width="100"></td>
+                <td data-label="name"><a href="/product-detail/{{wl.product.id}}">{{wl.product.title}}</a></td>
+                <td data-label="remove"><span class="remove-item" pid="{{wl.product.id}}" style="cursor: pointer;"><i class="fa fa-trash" aria-hidden="true"></i></span></td>
+                </tr>
+                <!-- <tr>
+                    <td data-label="image"><img src="prod.jpg"></td>
+                    <td data-label="name">Iphone</td>
+                    <td data-label="remove"><i class="fa fa-trash" aria-hidden="true"></i></td>
+                </tr> -->
+                {% endfor %}
        </tbody>
    </table>
+    {% else %}
+        <h3 class="text-center">You have no products in your wishlist</h3>
+        <div class="text-center">
+            <img src="{% static 'media/cart.png' %}" alt="" class="img-fluid img-thumbnail">
+        </div>
+    {% endif %}
+</div>
 <style>
-    h3{
+    .wishlistcon h3{
         text-align: center;
     }
-    a{
+    .wishlistcon a{
         color: black;
     }
     .table{
@@ -52,7 +62,20 @@
     .table tbody tr:nth-child(even){
         background-color: lightblue;
     }
-
+    /* for empty wislist image */
+    .text-center img {
+        width: 25%;
+    }
+    @media(max-width:900px) {
+        .text-center img {
+            width: 50%;
+        }
+    }
+    @media(max-width:700px) {
+        .text-center img {
+            width: 100%;
+        }
+    }
     @media(max-width: 500px){
         .table thead{
             display: none;

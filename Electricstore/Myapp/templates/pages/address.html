@@ -9,6 +9,7 @@
    <ul class="list-unstyled">
     <li class="d-grid"><a href="{% url 'profile' %}" class="btn">Profile</a></li>
     <li class="d-grid"><a href="{% url 'address' %}" class="btn {{active}}">Address</a></li>
+    <li class="d-grid"><a href="{% url 'orders' %}" class="btn">Orders</a></li>
    </ul>
   </div>
   <div class="col-sm-7 offset-sm-1">
@@ -18,7 +19,7 @@
      <div class="card">
       <div class="card-body">
        <h3>Address {{forloop.counter}}</h3><!--forloop.counter counts the number of loop-->
-       <p>Name: {{ad.name}}</p><!--name vaneko models.py ko customer class ko ho-->
+       <p>Name: {{ad.name}}</p><!--phone vaneko models.py ko customer class ko ho-->
        <p>Locality: {{ad.locality}}</p>
        <p>City: {{ad.city}}</p>
        <p>Region: {{ad.region}}</p>

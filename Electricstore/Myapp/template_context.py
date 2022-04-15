@@ -1,8 +1,8 @@
 from .models import Cart,Wishlist,Product
 from django.db.models import Min,Max
-def get_filters(request):
+def get_filters(request):#this will go to all the page
     user = request.user
-    minmaxprice = Product.objects.aggregate(Min('selling_price'),Max('selling_price'))
+    minmaxprice = Product.objects.aggregate(Min('discounted_price'),Max('discounted_price'))
     print(minmaxprice)
     if request.user.is_authenticated:
         cart = Cart.objects.filter(user=user)

@@ -64,7 +64,7 @@ class ProductDetailView(View):
         prod = get_object_or_404(Product, pk=pk)
         quan = product.quantity
         photos = Multipleimage.objects.filter(prod=prod)
-        related_products = Product.objects.filter(category=product.category).exclude(id=pk)[:4]
+        related_products = Product.objects.filter(category=product.category).exclude(id=pk)#[:5]//if we do this it will show first 5 products only
         reviewForm = ReviewAdd()#getting the reviewform from forms.py
             
 
@@ -137,7 +137,7 @@ class ProfileView(View):
             region = form.cleaned_data['region']
             reg = Customer(user=usr,name=name,locality=locality,city=city,region=region)
             reg.save()
-            messages.success(request,'Congrats!Address saved successfully')
+            messages.success(request,'Congrats! Profile Update successfully')
         return render(request,'pages/profile.html',{'form':form,'active':'btn-primary'})
 
 def updateprofile(request,pk):
@@ -199,8 +199,9 @@ def plus_cart(request):
     productkey = Product.objects.get(id=prod_id)
     print("quantity "+str(productkey.quantity))
     c = Cart.objects.get(Q(product=prod_id) & Q(user=request.user))#using Q property
-    c.quantity += 1
-    if(c.quantity<=productkey.quantity):    
+    
+    if(c.quantity<productkey.quantity):
+        c.quantity += 1    
         c.save()
     amount = 0.0
     shipping_amount = 70.0
@@ -224,8 +225,9 @@ def minus_cart(request):
     print("yesno"+prod_id)
     productkey = Product.objects.get(id=prod_id)
     c = Cart.objects.get(Q(product=prod_id) & Q(user=request.user))#using Q property
-    c.quantity -= 1
-    c.save()
+    if(c.quantity>1):
+        c.quantity -= 1
+        c.save()
     amount = 0.0
     shipping_amount = 70.0
     cart_product = [p for p in Cart.objects.all() if p.user == request.user]#checks all the objects of Cart module with current user
@@ -264,6 +266,19 @@ def remove_cart(request):
     return JsonResponse(data)
 
 @login_required
+def add_to_buynow(request):
+    user = request.user
+    productquantity = request.GET.get('quantity')
+    productid = request.GET.get('prod_id')
+    print("productquantities"+ str(productquantity))
+    print("goododod"+str(productid))#prints product id
+    product = Product.objects.get(id=productid)#matching with product id of product table and saves all objects to product variable
+    #Cart(user=user, product=product, quantity=productquantity).save()#saving to buynow table in database
+    Cart.objects.update_or_create(product=product,user=user,defaults={'quantity':productquantity})
+    
+    return redirect('/checkout')#url ko checkout/ path ma janxa
+
+@login_required
 def checkout(request):
     user = request.user
     add = Customer.objects.filter(user=user)
@@ -276,24 +291,34 @@ def checkout(request):
         for p in cart_product:
             tempamount = (p.quantity * p.product.discounted_price)
             amount += tempamount
-        totalamount = amount + shipping_amount    
-    return render(request, 'pages/checkout.html',{'add':add,'totalamount':totalamount,'cart_items':cart_items})
+        totalamount = amount + shipping_amount 
+        nepalitotamount = totalamount / 120
+        format_float = "{:.2f}".format(nepalitotamount)   
+    return render(request, 'pages/checkout.html',{'add':add,'totalamount':totalamount,'nrsamnt':format_float,'cart_items':cart_items})
 
 @login_required
 def payment_done(request):
     user = request.user
     custid = request.GET.get('custid')#by accessing the name=custid in checkout.html we get the customer id which is passed by ad.id 
-    print("abcde"+custid)
-    customer = Customer.objects.get(id=custid)#we get the customer object by matching with customer id
-    cart = Cart.objects.filter(user=user)
-    for c in cart:
-        # To decrease the product quanaity from available stock
-        orderproduct = Product.objects.filter(id=c.product_id).first()
-        orderproduct.quantity = orderproduct.quantity - c.quantity
-        OrderPlaced(user=user, customer=customer, product=c.product, quantity=c.quantity).save()
-        orderproduct.save()
-        c.delete()
-    return redirect("orders")    
+    print("abcde"+str(custid))
+    if custid:
+        customer = Customer.objects.get(id=custid)#we get the customer object by matching with customer id
+        print("customer"+str(customer.city))
+        cart = Cart.objects.filter(user=user)
+        for c in cart:
+            # To decrease the product quanaity from available stock
+            orderproduct = Product.objects.filter(id=c.product.id)#.first()
+            print("ordersproduct "+str(orderproduct))
+            for orderproduct in orderproduct:
+                orderproduct.quantity = orderproduct.quantity - c.quantity
+                orderproduct.save()
+            OrderPlaced(user=user, customer=customer,product=c.product, quantity=c.quantity).save()
+            c.delete()
+        messages.success(request,'Your order has been succesfully placed')
+        return redirect("orders")
+    else:
+        messages.error(request,'You need to provide the address by going to your profile page.')
+        return redirect('/checkout')       
 
 @login_required
 def orders(request):
@@ -377,17 +402,24 @@ class load_more(View):
 def filter_data(request,cat_id):
     brands = request.GET.getlist('brand[]')
     category = Category.objects.get(id=cat_id)
+    minprice = request.GET['minPrice']
+    maxprice = request.GET['maxPrice']
     allproducts = Product.objects.filter(category=category).order_by('-id').distinct()#order_by('-id') gives recent first,distinct helps to omit duplicate products
+    allproducts = allproducts.filter(discounted_price__gte=minprice)
+    allproducts = allproducts.filter(discounted_price__lte=maxprice)
+    brandcount = allproducts.count()
     if len(brands)>0:#in other words if brands exist
         allproducts = allproducts.filter(brand__id__in=brands).distinct()
+        brandcount = allproducts.count()
     t = render_to_string('ajax/productlist.html',# creates template to the string and returning product list page to t variable with the help of render_to_string
         {
             'mobile':allproducts,
         })
-    return JsonResponse({'data':t})
+    return JsonResponse({'data':t,'brandcount':brandcount})
 
 #search
 def search(request):
     q = request.GET['q'] 
     data = Product.objects.filter(title__icontains=q).order_by('-id')
+    # print("data"+str(data))
     return render(request,'pages/search.html',{'data':data})   

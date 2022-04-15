@@ -1,54 +1,54 @@
 {% extends "pages/base.html" %}
 {% load static %}
 {% block content %}
-
-    <div class="searchdiv">
-        <h4><span class="text-muted">Search result for:</span> {{request.GET.q}}</h4>
-        <hr>
-        {% for b in data %}
-        <div class="photos">
-            <div class="gallery">
-                <a href="{% url 'product-detail' b.id %}">
-                <img src="{{b.product_image.url}}" height="200">
-                <!-- product_image bhaneko models.y ko Product model ko product_image ho -->
-                <p class="cap">{{b.title}}</p>
-                <p class="pricecap">Rs {{b.discounted_price}}</p>
-                </a>     
-            </div>
+    
+<div class="row g-2" id="searchlists">
+    <h4><span class="text-muted" style="margin-left: 10px;">Search result for:</span> {{request.GET.q}}</h4>
+    <hr>
+    {% for b in data %}
+    <div class="photos">
+        <div class="gallery">
+            <a href="{% url 'product-detail' b.id %}">
+            <img src="{{b.product_image.url}}" height="200">
+            <!-- product_image bhaneko models.y ko Product model ko product_image ho -->
+            <p class="cap">{{b.title}}</p>
+            <p class="pricecap">Rs {{b.discounted_price}}</p>
+            </a>     
         </div>
-        {% endfor %}
-            
     </div>
-    <style>
-    .searchdiv{
-        margin: 10px 20px;
-    }
+    {% endfor %}
+</div>
+
+<style>
+#searchlists{
+    margin: 10px 20px;
+}
+.photos{
+    padding: 5px 20px;
+    float: left;
+    width: 25%;
+}
+.gallery{
+    border: 1px solid #ccc;
+}
+.gallery img{
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+@media screen and (max-width:900px){
     .photos{
-        padding: 0 6px;
-        float: left;
-        width: 25%;
+        width: 50%;
+        margin: 6px 0;
     }
-    .gallery{
-        border: 1px solid #ccc;
+}
+@media screen and (max-width:500px){
+    .photos{
+        width: 100%;
+        margin: 6px 0;
     }
-    .gallery img{
-        display: block;
-        margin-left: auto;
-        margin-right: auto;
-    }
-    @media screen and (max-width:900px){
-        .photos{
-            width: 50%;
-            margin: 6px 0;
-        }
-    }
-    @media screen and (max-width:500px){
-        .photos{
-            width: 100%;
-            margin: 6px 0;
-        }
-    }
-    </style>
+}
+</style>
     
     
 {% endblock content %}

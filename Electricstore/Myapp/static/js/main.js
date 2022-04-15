@@ -49,6 +49,8 @@ $('.plus-cart').click(function () {
     var eml = this.parentNode.children[2]
     console.log("yes"+id)
     console.log("yeseml "+eml)
+    var cc = 0
+    
     $.ajax({
         type: "GET",
         url: "/pluscart",
@@ -58,18 +60,18 @@ $('.plus-cart').click(function () {
         success: function(data){//if success then success function is called
             console.log(data)
             if(data.quantity<=data.pquantity){
-                console.log("success")
+                console.log("success") 
                 emls.innerText = data.quantity
                 document.getElementById("amount").innerText = data.amount
-                document.getElementById("totalamount").innerText = data.totalamount
-                
+                document.getElementById("totalamount").innerText = data.totalamount        
             }
-            else{
-                alertify.error("product will be out of stock if quantity will be more than "+ data.pquantity)
-                // $(".plus-cart").hide()
-                // emls.hide()
-                eml.addClass('disabled').removeClass('plus-cart')          
-            }
+             
+            // else{
+            //     alertify.error("product will be out of stock if quantity will be more than "+ data.pquantity)
+            //     // $(".plus-cart").hide()
+            //     // emls.hide()
+            //     eml.addClass('disabled').removeClass('plus-cart')          
+            // }
         }      
     })
 })
@@ -88,7 +90,7 @@ $('.minus-cart').click(function () {
         },
         success: function(data){//if success then success function is called
             console.log(data)
-            if(data.quantity>=0){
+            if(data.quantity>0){
                 console.log("success")
                 emls.innerText = data.quantity
                 document.getElementById("amount").innerText = data.amount
@@ -148,7 +150,6 @@ $('.increment-btn').click(function (e) {
 //decrement btn in product detail
 $('.decrement-btn').click(function (e) {
     e.preventDefault();
-
     var inc_value = $(this).closest('.row').find('.qty-input').val();
     var value = parseInt(inc_value,10);
     value = isNaN(value) ? 0 : value;
@@ -247,7 +248,7 @@ $("#addForm").submit(function(e){
 
                 //avg rating
                 console.log(res.avg_reviews.avg_rating)
-                $(".avgrating").text(res.avg_reviews.avg_rating.toFixed(1))//tofixed shows 1 number after decimal like 1.2
+                $(".avgrating").text(res.avg_reviews.avg_rating.toFixed(1)+"/5")//tofixed shows 1 number after decimal like 1.2
 
             }
         }
@@ -292,11 +293,15 @@ $("#loadmore").on('click',function(){
 })
 
 // for filtering price of product list
-$(".form-check-input").on('click',function(){
+$(".form-check-input,#priceFilterBtn").on('click',function(){//implementing this script with two different selectors one is brand checkbox and another one is price
     console.log("clicked baby");
+    var _minPrice=$('#maxPrice').attr('min');//gives the minimum price of the product
+	var _maxPrice=$('#maxPrice').val();//gives the actual price of the product which user has given to price filter max box
+    var filterObj = {};
+    filterObj.minPrice=_minPrice;
+	filterObj.maxPrice=_maxPrice;
     var catid = $(this).attr('catid');
     var url = "/filter-data/"+ catid;
-    var filterObj = {};
     $(".form-check-input").each(function(index,ele){//looping for each iteration
         var filterval = $(this).val();//value dinxa form-check-input ko
         var filterkey = $(this).attr('data-filter');//data-filter attribute ma lekheko key dinxa i.e.brand which is defined under .form-check-input class
@@ -316,8 +321,10 @@ $(".form-check-input").on('click',function(){
         },
         success:function(res){
             console.log("success");
-            $("#productlists").html(res.data);
+            $("#productlists").html(res.data);//views.py bata render_to_string lai eta dekhaunxa productlists vane div class ko html vitra
             $(".ajaxloading").hide();
+            console.log(res.brandcount);
+            $("#totprod").html(res.brandcount);
         }
 
     });
@@ -338,3 +345,43 @@ $("#maxPrice").on('blur',function(){
         return false;
     }
 });
+
+
+$('.paypals span').click(function() {
+    alert("ninice");
+    var ele = document.getElementsByName('custid');
+        
+        for(let i = 0; i < ele.length; i++) {
+            if(ele[i].checked){
+            // document.getElementById("result").innerHTML
+            //         = "Gender: "+ele[i].value;
+                var name = ele[i].value;
+                console.log("noice"+name);
+            }    
+            else{
+            alert("errororororor");
+            }    
+        }
+
+ });
+
+// $('.paypals').click(function () {
+//      console.log("nice shot");
+//      alert("good shot");
+
+//     var ele = document.getElementsByName('custid');
+        
+//     for(let i = 0; i < ele.length; i++) {
+//         if(ele[i].checked){
+//         // document.getElementById("result").innerHTML
+//         //         = "Gender: "+ele[i].value;
+//             var name = ele[i].value;
+//             console.log("noice"+name);
+//         }    
+//         else{
+//         alert("errororororor");
+//         }    
+//     }
+    
+
+// })

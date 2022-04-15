@@ -1,9 +1,10 @@
+from unicodedata import category
 from django.contrib import admin
 from .models import Banner,Customer,Product,Cart,OrderPlaced,Multipleimage,Wishlist,Brand,Category,ProductReview
 # Register your models here.
 @admin.register(Customer)
 class CustomerAdmin(admin.ModelAdmin):
-    list_display = ("id", "user", "name")
+    list_display = ("id", "user", "city")
 # admin.site.register(Product)
 admin.site.register(Cart)
 admin.site.register(OrderPlaced)
@@ -20,8 +21,8 @@ class MultipleimageAdmin(admin.StackedInline):#we are using StackedInline class 
  
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ("id","title","is_featured")
-    list_editable = ("is_featured",)
+    list_display = ("id","title","is_featured","quantity","category")
+    list_editable = ("is_featured","quantity")
     inlines = [MultipleimageAdmin]
  
     class Meta:

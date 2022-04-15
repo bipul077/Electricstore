@@ -12,43 +12,28 @@
             <option value="featured">Featured</option>
         </select>
     </div>
+    
     <div class="row g-2" id="container-fluid">
-        <div class="col-md-3">
+        <div class="col-md-3 leftside" >
             <div class="processor p-2">
                 <div class="heading d-flex justify-content-between align-items-center">
                     <h6 class="text-uppercase"><span id="cone">Price</span></h6>
                 </div>
                 <div class="list-group list-group-flush">
 					<li class="list-group-item">
-						<input type="range" id="rangeInput" value="{{minmaxprice.selling_price__min}}" min={{minmaxprice.selling_price__min}} max={{minmaxprice.selling_price__max}} oninput="maxPrice.value=this.value" />
+                        <!-- minmaxprice is received from template_context.py -->
+						<input class="w-100" type="range" id="rangeInput" value="{{minmaxprice.discounted_price__max}}" min={{minmaxprice.discounted_price__min}} max={{minmaxprice.discounted_price__max}} oninput="maxPrice.value=this.value" />
 						<!-- id rangeInput depends upon onkeyup rangeInput so that when we type the price in max box it shows in price range too>
                          id maxPrice depends upon oninput maxPrice so that when we move the price range it shows in max box too -->
-                        <p>{{minmaxprice.selling_price__min|floatformat:0}} - {{minmaxprice.selling_price__max|floatformat:0}}</p>
+                        <p class="text-center">{{minmaxprice.discounted_price__min|floatformat:0}} - {{minmaxprice.discounted_price__max|floatformat:0}}</p>
                     </li>
 					<li class="list-group-item">
-						Max: <input type="number" value="{{minmaxprice.selling_price__min}}" min={{minmaxprice.selling_price__min}} max={{minmaxprice.selling_price__max}} id="maxPrice" onkeyup="rangeInput.value=this.value"/>
-						<button id="priceFilterBtn" class="btn btn-info btn-sm" style="margin-top: -2px;">Filter</button>
+						Max: <input type="number" value="{{minmaxprice.discounted_price__max}}" min={{minmaxprice.discounted_price__min}} max={{minmaxprice.discounted_price__max}} id="maxPrice" onkeyup="rangeInput.value=this.value"/>
+						<button id="priceFilterBtn" catid="{{categoryid.id}}" class="btn btn-info btn-sm" style="margin-top: -2px;">Filter</button>
 					</li>
 				</div>
             </div>
-            <div class="processor p-2">
-                <div class="heading d-flex justify-content-between align-items-center">
-                    <h6 class="text-uppercase"><span id="ctwo">Case Material</span></h6> <span>--</span>
-                </div>
-                <div class="d-flex justify-content-between mt-2">
-                    <div class="form-check"> <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault"> <label class="form-check-label" for="flexCheckDefault"> <span id="op5">Steel</span> </label> </div> <span>3</span>
-                </div>
-                <div class="d-flex justify-content-between mt-2">
-                    <div class="form-check"> <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked1" checked> <label class="form-check-label" for="flexCheckChecked1"> <span id="op6">Aluminium</span></label> </div> <span>4</span>
-                </div>
-                <div class="d-flex justify-content-between mt-2">
-                    <div class="form-check"> </label><input class="form-check-input" type="checkbox" value="" id="flexCheckChecked2" checked> <label class="form-check-label" for="flexCheckChecked2"> <span id="op7">Plastic</span> </label> </div> <span>14</span>
-                </div>
-                <div class="d-flex justify-content-between mt-2">
-                    <div class="form-check"> </label><input class="form-check-input" type="checkbox" value="" id="flexCheckChecked3" checked> <label class="form-check-label" for="flexCheckChecked3"> <span id="op8">Tempered-Glass</span> </label> </div> <span>8</span>
-                </div>
-            </div>
-            <div class="brand p-2">
+            <div class="brand p-2 mt-3">
                 <div class="heading d-flex justify-content-between align-items-center">
                     <h6 class="text-uppercase"><span id="cthree">Brands</span></h6> <span>--</span>
                 </div>
@@ -58,24 +43,13 @@
                     </div>
                 {% endfor %}
                 
-                <!-- <div class="d-flex justify-content-between mt-2">
-                    <div class="form-check"> <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked12" checked> <label class="form-check-label" for="flexCheckChecked12"> <span id="op10">DELL</span> </label> </div> <span>4</span>
-                </div>
-                <div class="d-flex justify-content-between mt-2">
-                    <div class="form-check"> <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked13" checked> <label class="form-check-label" for="flexCheckChecked13"> <span id="op11">Acer</span> </label> </div> <span>24</span>
-                </div>
-                <div class="d-flex justify-content-between mt-2">
-                    <div class="form-check"> <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked14" checked> <label class="form-check-label" for="flexCheckChecked14"> <span id="op12">Corsair</span> </label> </div> <span>18</span>
-                </div>
-                <div class="d-flex justify-content-between mt-2">
-                    <div class="form-check"> <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked15" checked> <label class="form-check-label" for="flexCheckChecked15"> <span id="op13">ASUS</span> </label> </div> <span>44</span>
-                </div> -->
             </div>
         </div>
-        
-        <div class="col-md-9">
+        <div class="col-md-9" id="prods">
+            <p id="totalproducts">Showing all <span id="totprod"> {{totaldata}} </span> products</p>
             <div class="row g-2" id="productlists">
                 <p class="ajaxloading">Loading..</p>
+              
                 {% for b in products %}
                 <div class="col-md-4 productbox">
                     <div class="product py-4"> 
@@ -85,8 +59,8 @@
                             <div class="about text-center">
                                 <h1><span id="prod1">{{b.title}}</span></h1> <span id="price1">Rs {{b.discounted_price}}</span>
                             </div>                   
-                        <div class="text-center" style="color: #ffbb00;"> <i class="fa fa-star star"></i> <i class="fa fa-star star"></i> <i class="fa fa-star star"></i> <i class="fa fa-star star"></i> </div>
-                        <div class="cart-button mt-3 px-2 d-flex justify-content-center align-items-center"> 
+                        <!-- <div class="text-center" style="color: #ffbb00;"> <i class="fa fa-star star"></i> <i class="fa fa-star star"></i> <i class="fa fa-star star"></i> <i class="fa fa-star star"></i> </div> -->
+                        <div class="cart-button mt-2 px-2 d-flex justify-content-center align-items-center"> 
                             <form action="/add-to-cart"><!--to get the product id we do this-->
                                 <input type="hidden" name="prod_id" value={{b.id}} id="prod_id">
                                 <button class="btn btn-primary text-uppercase" ><span id="cart1">Add to cart</span></button>
@@ -103,6 +77,12 @@
     </div>
 </div>
 <style>
+#prods{
+    margin-top: -2rem;
+}
+#totalproducts{
+    text-align: center;
+}
 select{
     position: relative;
     top: 5px;
@@ -116,10 +96,12 @@ border-radius: 3px
 
 .processor {
     background-color: #eee;
-    margin-top: 5px;
+    margin-top: 0px;
     border-bottom: 1px solid #fff
 }
-
+/* .leftside{
+    margin-top: 20px;
+} */
 .brand {
     margin-top: 5px;
     background-color: #eee;
@@ -216,13 +198,16 @@ button:active {
 .filtering{
     display: flex;
     justify-content: left;
-    margin-left: -10px;
+    margin-left: 0px;
 }
 
 @media screen and (max-width:800px){
 	.col-md-4{
         width: 96%;
     }
+    #prods{
+        margin-top: 0rem;
+    }   
 }
 
 @media screen and (min-width:800px){
