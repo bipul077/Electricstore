@@ -25,11 +25,11 @@
                     <p class="alert alert-danger my-3">{{error}}</p>
                  {% endfor %}
                 {% endif %}
-                {% if messages %}
-                {% for message in messages %}
-                    <p {% if message.tags %} class="alert alert-{{message.tags}} mb-5" {% endif %}>{{message}}</p>
-                {% endfor %}
-                {% endif %}   
+				{% if messages %}
+				{% for message in messages %}
+					<p {% if message.tags %} class="alert {{message.tags}} mb-5 text-center" {% endif %}>{{message}}</p>
+				{% endfor %}
+				{% endif %} 
             </form>
         </div>
 </div>

@@ -2,6 +2,13 @@
 {% load static %}
 {% block title %}Product Detail{% endblock title %}
 {% block content %}
+
+{% if messages %}
+{% for message in messages %}
+    <p {% if message.tags %} class="alert {{message.tags}} mb-5 text-center" {% endif %}>{{message}}</p>
+{% endfor %}
+{% endif %} 
+
 <div class="detailcontainer">
          
     <div class="card" id="card">
@@ -58,7 +65,11 @@
     <dd><span id="para8">All over Nepal</span></dd>
     </dl>  <!-- item-property-hor .// -->
     <div class="stocks">
+    {% if product.quantity > 0 %}
         <span class="text-success" style="font-weight: bold;">In stock</span>
+    {% else %}
+        <span class="text-danger" style="font-weight: bold;">Out of stock</span>
+    {% endif %}
     </div>
 
     <hr>
@@ -69,7 +80,7 @@
                         <form action="/buynow">
                             <span class="dec qtybtn decrement-btn">-</span>
                             <input type="text" name="quantity" class="qty-input" value="1" id="quantity">
-                            <span class="dec qtybtn increment-btn newhover" pid="{{product.quantity}}">+</span>
+                            <span class="dec qtybtn increment-btn newhover" id="decrementid" pid="{{product.quantity}}">+</span>
                             <input type="hidden" name="prod_id" value={{product.id}} id="prod_id"><!--to get the product id we do this -->
                             <button type="submit" class="btn btn-danger" id="buynowbtn">Buy now</button>
                         </form>

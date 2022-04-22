@@ -1,8 +1,9 @@
+from asyncore import compact_traceback
 from itertools import product
 from django.http import JsonResponse
 from django.views.generic import ListView
 from django.shortcuts import render,get_object_or_404,redirect
-from .models import Banner, Category,Customer, Multipleimage, Product, Cart, OrderPlaced, Wishlist,ProductReview
+from .models import Banner, Category,Customer, Multipleimage, Product, Cart, OrderPlaced, Wishlist,ProductReview,Coupon
 from django.views import View
 from .forms import CustomerRegistrationForms,LoginForm, CustomerProfileForm,ReviewAdd
 from django.contrib import messages
@@ -135,7 +136,8 @@ class ProfileView(View):
             locality = form.cleaned_data['locality']
             city = form.cleaned_data['city']
             region = form.cleaned_data['region']
-            reg = Customer(user=usr,name=name,locality=locality,city=city,region=region)
+            phone = form.cleaned_data['phonenumber']
+            reg = Customer(user=usr,name=name,locality=locality,city=city,region=region,phonenumber=phone)
             reg.save()
             messages.success(request,'Congrats! Profile Update successfully')
         return render(request,'pages/profile.html',{'form':form,'active':'btn-primary'})
@@ -183,12 +185,15 @@ def show_cart(request):
         total_amount = 0.0
         cart_product = [p for p in Cart.objects.all() if p.user == user]#checks all the objects of Cart module with current user
         print(cart_product)#similar to above cart
+        # discounts = Coupon.objects.all()
+        # print("discount "+str(discounts))
+    
         if cart_product:#checks whether there is objects in cart_product or not
             for p in cart_product:
                 tempamount = (p.quantity * p.product.discounted_price)
                 amount += tempamount
-                total_amount = amount + shipping_amount
-            return render(request,'pages/addtocart.html',{'carts':cart, 'totalamount':total_amount, 'amount':amount})
+                total_amount = amount + shipping_amount 
+            return render(request,'pages/addtocart.html',{'carts':cart, 'totalamount':total_amount,'amount':amount,'discount':discount})
         else:
             return render(request,'pages/emptycart.html')
 
@@ -274,9 +279,13 @@ def add_to_buynow(request):
     print("goododod"+str(productid))#prints product id
     product = Product.objects.get(id=productid)#matching with product id of product table and saves all objects to product variable
     #Cart(user=user, product=product, quantity=productquantity).save()#saving to buynow table in database
-    Cart.objects.update_or_create(product=product,user=user,defaults={'quantity':productquantity})
+    if(product.quantity>0):
+        Cart.objects.update_or_create(product=product,user=user,defaults={'quantity':productquantity})
+        return redirect('/checkout')#url ko checkout/ path ma janxa
+    else:
+        messages.error(request,"sorry! your product is out of stock")
+        return redirect('/product-detail/'+productid)
     
-    return redirect('/checkout')#url ko checkout/ path ma janxa
 
 @login_required
 def checkout(request):
@@ -294,6 +303,11 @@ def checkout(request):
         totalamount = amount + shipping_amount 
         nepalitotamount = totalamount / 120
         format_float = "{:.2f}".format(nepalitotamount)   
+    for a in cart_items:
+        if(a.product.quantity==0):
+            outproduct = a.product.title
+            messages.error(request,"Sorry! Your "+outproduct+" is out of stock")
+            return redirect('/cart')
     return render(request, 'pages/checkout.html',{'add':add,'totalamount':totalamount,'nrsamnt':format_float,'cart_items':cart_items})
 
 @login_required
@@ -306,13 +320,13 @@ def payment_done(request):
         print("customer"+str(customer.city))
         cart = Cart.objects.filter(user=user)
         for c in cart:
-            # To decrease the product quanaity from available stock
+            totalamount = c.quantity * c.product.discounted_price
             orderproduct = Product.objects.filter(id=c.product.id)#.first()
             print("ordersproduct "+str(orderproduct))
             for orderproduct in orderproduct:
-                orderproduct.quantity = orderproduct.quantity - c.quantity
+                orderproduct.quantity = orderproduct.quantity - c.quantity # To decrease the product quanaity from available stock
                 orderproduct.save()
-            OrderPlaced(user=user, customer=customer,product=c.product, quantity=c.quantity).save()
+            OrderPlaced(user=user, customer=customer,product=c.product, quantity=c.quantity,total_amount=totalamount).save()
             c.delete()
         messages.success(request,'Your order has been succesfully placed')
         return redirect("orders")
@@ -423,3 +437,42 @@ def search(request):
     data = Product.objects.filter(title__icontains=q).order_by('-id')
     # print("data"+str(data))
     return render(request,'pages/search.html',{'data':data})   
+
+def discount(request):
+    dis = request.GET['discountcode']
+    tot = request.GET['totalamount']
+    discountcode = str(dis)
+    print("discoutnsssss "+dis)
+    print("total amounts "+tot)
+    discounts = Coupon.objects.all()
+    for a in discounts:
+        #print("asdasad"+type(a.name))
+        # print(type(discountcode))
+        print(type(a.discount))
+        if(a.name==discountcode):
+            print("niniceokok"+a.name)
+            disamnt = float(a.discount)
+            newtotalamount = float(tot) - disamnt
+            boolean = True
+            data={#for showing in network console
+                'totalamount':newtotalamount,
+                'boolean':boolean, 
+                'disamnt':disamnt
+            }
+            break
+        else:
+            newtotalamount = tot
+            boolean = False
+            data={#for showing in network console
+                'totalamount':newtotalamount,
+                'boolean':boolean, 
+            }
+    return JsonResponse(data)
+    # amount = 0.0
+    # shipping_amount = 70.0
+    # cart_product = [p for p in Cart.objects.all() if p.user == request.user]#checks all the objects of Cart module with current user
+    # for p in cart_product:
+    #     tempamount = (p.quantity * p.product.discounted_price)
+    #     amount += tempamount
+
+    # return redirect('/cart')#url ko cart/ path ma janxa

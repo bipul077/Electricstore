@@ -37,7 +37,7 @@
                     <div class="col-lg-2 col-md-2">
                         <div class="logo">
                             <a href="{% url 'home' %}">
-                                <img src="{% static 'media/mainlogo.png' %}" width="130" height="80" alt="image">
+                                <img src="{% static 'media/logo.png' %}" width="130" height="80" alt="image">
                             </a>
                         </div>
                     </div>
@@ -74,11 +74,14 @@
                         <span>All Categories</span>
                         <i class="fa fa-caret-down"></i>
                         <ul class="depart-hover">
-                            <li><a href="/categorylist/1">Mobiles</a></li> 
+                            {% for cat in categos %}
+                                <li><a href="/categorylist/{{cat.id}}">{{cat.title}}</a></li> 
+                            {% endfor %}  
+                            <!-- <li><a href="/categorylist/1">Mobiles</a></li> 
                             <li><a href="/categorylist/2">Laptops</a></li> 
-                            <li><a href="/categorylist/3">Television</a></li>
+                            <li><a href="/categorylist/3">Television</a></li> 
                             <li><a href="#">Home Appliances</a></li>  
-                            <li><a href="#">Accessories/Gadgets</a></li>      
+                            <li><a href="#">Accessories/Gadgets</a></li>        -->
                         </ul>
                     </div>
                 </div>
@@ -87,11 +90,9 @@
                         <span class="cats">
                             <li><a href="#">All Categories</a>
                                 <ul class="depart-hover">
-                                    <li><a href="/categorylist/1">Mobiles</a></li> 
-                                    <li><a href="/categorylist/2">Laptops</a></li> 
-                                    <li><a href="/categorylist/3">Television</a></li>
-                                    <li><a href="#">Home Appliances</a></li>
-                                    <li><a href="#">Accessories/Gadgets</a></li>  
+                                    {% for cat in categos %}
+                                        <li><a href="/categorylist/{{cat.id}}">{{cat.title}}</a></li> 
+                                    {% endfor %} 
                                 </ul>
                             </li>
                         </span>

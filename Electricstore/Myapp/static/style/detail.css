@@ -13,9 +13,9 @@ body{
     overflow-x: hidden;
     margin: 0;
 }
-.row {
+/* .row {
     margin: 0;
-} 
+}  */
 
  #product-tab {
     margin-top: 10px;
@@ -314,10 +314,10 @@ ul, ol {
 .newhover{
     display: block;
     font-size: 24px;
-    color: pink;
+    color: rgb(175, 165, 165);
     float: left;
     line-height: 38px;
-    cursor: pointer;
+    cursor: no-drop;
     width: 18px;
 }
 

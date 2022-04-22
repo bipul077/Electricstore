@@ -18,10 +18,20 @@
           <div class="products">
             <h3 class="title">Checkout</h3>
             {% for item in cart_items %}
-            <div class="item">
+            <!-- <div class="item">
+              <div class="col-2"><img class="img-fluid" src="{{item.product.product_image.url}}" alt="image"></div>
               <span class="price">Rs. {{item.total_cost}}</span>
               <p class="item-name">{{item.product.title}}</p>
               <p class="fst-italic">Quantity: {{item.quantity}}</p>
+            </div>  -->
+            <div class="row main align-items-center">
+                <div class="col-2"><img class="img-fluid" src="{{item.product.product_image.url}}" alt="image"></div>
+                <div class="col">
+                    <span class="price">Rs. {{item.total_cost}}</span>
+                    <p class="item-name">{{item.product.title}}</p>
+                    <p class="fst-italic">Quantity: {{item.quantity}}</p>
+                </div>
+                <!-- <div class="price">Rs. {{item.product.discounted_price}} </div> -->
             </div>
             {% endfor %}
             <div class="total">Total(inc.Shipping cost)<span class="price">Rs. {{totalamount}}</span></div><!--totalamount etikai pass vaira xa checkout view bata so item.totalamount gareko-->
@@ -62,6 +72,10 @@
   </main>
 </body>
 <style>
+    .row>*{
+        padding-left: 0px;
+        padding-right: 0px;
+    }
     .payment-form{
 	padding-bottom: 50px;
 	font-family: 'Montserrat', sans-serif;

@@ -365,6 +365,38 @@ $('.paypals span').click(function() {
 
  });
 
+ $('#discountcode').click(function() {
+    // var val = this.value;
+    var emls = this.parentNode.children[1].value
+    console.log("himpandu "+emls)
+    var totalamount = document.getElementById("totamount").textContent
+    var tots = parseFloat(totalamount)
+    console.log("ohyestotalamount "+tots)
+
+    //start ajax
+    $.ajax({
+        type: "GET",
+        url: "/discount",
+        data: {//this data is sent to the server
+            discountcode: emls,
+            totalamount: tots
+        },
+        success:function(res){//catches the data which is given by views.py
+            console.log("success")
+            console.log(res.totalamount)
+            if(res.boolean==false){
+                alertify.error("Inavalid discount code")
+            }
+            else{
+                alertify.success("Congrats! You have received "+ res.disamnt + " as discount")
+            }
+            document.getElementById("totamount").innerText = res.totalamount
+        }
+            
+    })
+
+ });
+
 // $('.paypals').click(function () {
 //      console.log("nice shot");
 //      alert("good shot");

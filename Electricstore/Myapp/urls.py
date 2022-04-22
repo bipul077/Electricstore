@@ -37,5 +37,6 @@ urlpatterns = [
      path('load-more-data/<int:cat_id>',views.load_more.as_view(),name='loadmore'),
      path('filter-data/<int:cat_id>',views.filter_data,name='filter_data'),
      path('search/',views.search,name='search'),
+     path('discount/',views.discount,name='discount'),
      # path('load-more-data',views.load_more,name='load_more_data')
 ]

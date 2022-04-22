@@ -17,8 +17,9 @@ class Customer(models.Model):
   locality = models.CharField(max_length=200)
   city = models.CharField(max_length=200)
   region = models.CharField(choices=REGION_CHOICES,max_length=50)
+  phonenumber = models.BigIntegerField()
   def __str__(self):
-      return f"{self.locality}, {self.city}, {self.region}"
+      return f"{self.locality}, {self.city}, {self.region}, {self.phonenumber}"
 
 CATEGORY_CHOICES = (
   ('M','Mobile'),
@@ -98,6 +99,7 @@ class OrderPlaced(models.Model):
   quantity = models.PositiveIntegerField(default=1)
   ordered_date = models.DateTimeField(auto_now_add=True)
   status = models.CharField(max_length=50,choices=STATUS_CHOICES,default='Pending')
+  total_amount = models.CharField(max_length=100)
 
   def __str__(self):
     return str(self.user)+ " " + str(self.product.title)
@@ -112,6 +114,13 @@ class Wishlist(models.Model):
 
   def __str__(self):
     return str(self.user)+ " " + str(self.product.title)
+
+class Coupon(models.Model):
+  name = models.CharField(max_length=100,default='Msd')
+  discount = models.FloatField(max_length=100,default=100)
+
+  def __str__(self):
+    return str(self.id)+ " " + str(self.name)
 
     #Product Review
 RATING = (
